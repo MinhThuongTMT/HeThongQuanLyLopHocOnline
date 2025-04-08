@@ -1,170 +1,185 @@
 package HeThongQuanLyLopHocOnline;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 public class ThongTinGiangVien extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField textField;
+    private JTextField textField_1;
+    private JTextField textField_2;
+    private JTextField textField_3;
+    private JTextField textField_4;
+    private JTextField textField_5;
+    private GiangVien giangVien;
+    private JLabel lblImage;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ThongTinGiangVien frame = new ThongTinGiangVien();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public ThongTinGiangVien(GiangVien giangVien) {
+        this.giangVien = giangVien;
 
-	/**
-	 * Create the frame.
-	 */
-	public ThongTinGiangVien() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 450); // Tăng kích thước cho giao diện thoáng
-		setTitle("Thông Tin Giảng Viên");
-		setResizable(false); // Không cho thay đổi kích thước để giữ bố cục
+        setTitle("Thông Tin Giảng Viên");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 600, 350);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(0, 0, 128));
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        contentPane.setLayout(new BorderLayout(10, 10));
+        setContentPane(contentPane);
 
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 121)); // Nền xanh đậm
-		contentPane.setBorder(new EmptyBorder(15, 15, 15, 15)); // Padding lớn hơn
-		contentPane.setLayout(null);
-		setContentPane(contentPane);
+        JLabel lblTitle = new JLabel("THÔNG TIN GIẢNG VIÊN", SwingConstants.CENTER);
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        contentPane.add(lblTitle, BorderLayout.NORTH);
 
-		// Panel tiêu đề với gradient
-		JPanel titlePanel = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				Graphics2D g2d = (Graphics2D) g;
-				g2d.setColor(new Color(255, 204, 0)); // Màu vàng
-				g2d.fillRect(0, 0, getWidth(), getHeight());
-			}
-		};
-		titlePanel.setBounds(0, 0, 650, 60);
-		titlePanel.setLayout(null);
-		contentPane.add(titlePanel);
+        // Panel chứa ảnh giảng viên
+        lblImage = new JLabel();
+        lblImage.setPreferredSize(new Dimension(120, 150));
+        lblImage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+        lblImage.setVerticalAlignment(SwingConstants.CENTER);
+        try {
+            ImageIcon icon = new ImageIcon("avatar.png");
+            Image img = icon.getImage().getScaledInstance(120, 150, Image.SCALE_SMOOTH);
+            lblImage.setIcon(new ImageIcon(img));
+        } catch (Exception ex) {
+            lblImage.setText("No Image");
+        }
+        contentPane.add(lblImage, BorderLayout.WEST);
 
-		JLabel lblTitle = new JLabel("THÔNG TIN GIẢNG VIÊN");
-		lblTitle.setForeground(Color.BLACK); // Đổi màu chữ cho nổi trên gradient
-		lblTitle.setFont(new Font("Arial", Font.BOLD, 26));
-		lblTitle.setBounds(180, 15, 375, 30); // Căn giữa
-		titlePanel.add(lblTitle);
+        JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
+        panel.setBackground(new Color(255, 255, 255));
+        contentPane.add(panel, BorderLayout.CENTER);
 
-		// Panel chứa hình ảnh giảng viên
-		JPanel imagePanel = new JPanel();
-		imagePanel.setBackground(new Color(0, 0, 121));
-		imagePanel.setBounds(50, 90, 180, 180); // Tăng kích thước ảnh
-		imagePanel.setBorder(new LineBorder(Color.WHITE, 3, true)); // Viền trắng bo tròn
-		imagePanel.setLayout(null);
-		contentPane.add(imagePanel);
+        Font labelFont = new Font("Times New Roman", Font.BOLD, 14);
 
-		// Hình ảnh giảng viên
-		JLabel lblHinhAnh = new JLabel("");
-		lblHinhAnh.setBounds(0, 0, 180, 180); // Đầy panel
-		ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Icon/giangvien1.jpg"));
-		if (logoIcon.getImageLoadStatus() == java.awt.MediaTracker.COMPLETE) {
-			lblHinhAnh.setIcon(logoIcon);
-		} else {
-			System.out.println("Lỗi: Không tìm thấy ảnh tại /Icon/giangvien1.jpg. Kiểm tra đường dẫn!");
-			lblHinhAnh.setText("Ảnh không tải được");
-			lblHinhAnh.setForeground(Color.RED);
-			lblHinhAnh.setHorizontalAlignment(JLabel.CENTER);
-		}
-		imagePanel.add(lblHinhAnh);
+        JLabel lblHoTen = new JLabel("HỌ VÀ TÊN:", SwingConstants.RIGHT);
+        lblHoTen.setFont(labelFont);
+        panel.add(lblHoTen);
+        textField = new JTextField();
+        panel.add(textField);
 
-		// Panel chứa thông tin giảng viên
-		JPanel infoPanel = new JPanel();
-		infoPanel.setBackground(new Color(0, 0, 150)); // Xanh đậm nhạt hơn chút
-		infoPanel.setBounds(260, 90, 340, 300);
-		infoPanel.setBorder(new LineBorder(Color.WHITE, 2, true)); // Viền trắng bo tròn
-		infoPanel.setLayout(null);
-		contentPane.add(infoPanel);
+        JLabel lblMon = new JLabel("MÔN GIẢNG DẠY:", SwingConstants.RIGHT);
+        lblMon.setFont(labelFont);
+        panel.add(lblMon);
+        textField_4 = new JTextField();
+        panel.add(textField_4);
 
-		// Thông tin giảng viên
-		int yOffset = 30; // Khoảng cách ban đầu
-		int lineHeight = 40; // Chiều cao mỗi dòng
+        JLabel lblMaGV = new JLabel("MÃ GIẢNG VIÊN:", SwingConstants.RIGHT);
+        lblMaGV.setFont(labelFont);
+        panel.add(lblMaGV);
+        textField_1 = new JTextField();
+        panel.add(textField_1);
 
-		JLabel lblMaGV = new JLabel("Mã GV:");
-		lblMaGV.setForeground(Color.WHITE);
-		lblMaGV.setFont(new Font("Arial", Font.BOLD, 16));
-		lblMaGV.setBounds(20, 42, 100, 20);
-		infoPanel.add(lblMaGV);
+        JLabel lblMaMH = new JLabel("MÃ MÔN HỌC:", SwingConstants.RIGHT);
+        lblMaMH.setFont(labelFont);
+        panel.add(lblMaMH);
+        textField_5 = new JTextField();
+        panel.add(textField_5);
 
-		JLabel lblMaGVValue = new JLabel("GV001");
-		lblMaGVValue.setForeground(Color.WHITE);
-		lblMaGVValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblMaGVValue.setBounds(130, 42, 200, 20);
-		infoPanel.add(lblMaGVValue);
+        JLabel lblEmail = new JLabel("EMAIL:", SwingConstants.RIGHT);
+        lblEmail.setFont(labelFont);
+        panel.add(lblEmail);
+        textField_2 = new JTextField();
+        panel.add(textField_2);
 
-		yOffset += lineHeight;
-		JLabel lblTen = new JLabel("Tên:");
-		lblTen.setForeground(Color.WHITE);
-		lblTen.setFont(new Font("Arial", Font.BOLD, 16));
-		lblTen.setBounds(20, 84, 100, 20);
-		infoPanel.add(lblTen);
+        JLabel lblSDT = new JLabel("SỐ ĐIỆN THOẠI:", SwingConstants.RIGHT);
+        lblSDT.setFont(labelFont);
+        panel.add(lblSDT);
+        textField_3 = new JTextField();
+        panel.add(textField_3);
 
-		JLabel lblTenValue = new JLabel("Nguyễn Văn A");
-		lblTenValue.setForeground(Color.WHITE);
-		lblTenValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblTenValue.setBounds(130, 84, 200, 20);
-		infoPanel.add(lblTenValue);
+        textField.setText(giangVien.getHoTen());
+        textField_4.setText(giangVien.getMonGiangDay());
+        textField_1.setText(giangVien.getMaGV());
+        textField_2.setText(giangVien.getEmail());
+        textField_3.setText(giangVien.getSoDienThoai());
+        textField_5.setText(giangVien.getMaMon());
 
-		yOffset += lineHeight;
-		JLabel lblMonDay = new JLabel("Môn Dạy:");
-		lblMonDay.setForeground(Color.WHITE);
-		lblMonDay.setFont(new Font("Arial", Font.BOLD, 16));
-		lblMonDay.setBounds(20, 132, 100, 20);
-		infoPanel.add(lblMonDay);
+        textField.setEditable(false);
+        textField_1.setEditable(false);
+        textField_2.setEditable(false);
+        textField_3.setEditable(false);
+        textField_4.setEditable(false);
+        textField_5.setEditable(false);
 
-		JLabel lblMonDayValue = new JLabel("Lập trình Java");
-		lblMonDayValue.setForeground(Color.WHITE);
-		lblMonDayValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblMonDayValue.setBounds(130, 132, 200, 20);
-		infoPanel.add(lblMonDayValue);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        buttonPanel.setBackground(new Color(0, 0, 128));
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
-		yOffset += lineHeight;
-		JLabel lblSoLop = new JLabel("Số Lớp:");
-		lblSoLop.setForeground(Color.WHITE);
-		lblSoLop.setFont(new Font("Arial", Font.BOLD, 16));
-		lblSoLop.setBounds(20, 181, 100, 20);
-		infoPanel.add(lblSoLop);
+        JButton btnSua = new JButton("Sửa");
+        JButton btnChamDiem = new JButton("Chấm Điểm");
+        JButton btnGiaoBai = new JButton("Giao Bài");
+        JButton btnDiemDanh = new JButton("Điểm Danh");
 
-		JLabel lblSoLopValue = new JLabel("3");
-		lblSoLopValue.setForeground(Color.WHITE);
-		lblSoLopValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblSoLopValue.setBounds(130, 181, 200, 20);
-		infoPanel.add(lblSoLopValue);
+        ActionListener buttonHighlight = e -> {
+            JButton btn = (JButton) e.getSource();
+            Color currentColor = btn.getBackground();
+            Color defaultColor = UIManager.getColor("Button.background");
+            btn.setBackground(currentColor.equals(Color.YELLOW) ? defaultColor : Color.YELLOW);
+        };
 
-		yOffset += lineHeight;
-		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setForeground(Color.WHITE);
-		lblEmail.setFont(new Font("Arial", Font.BOLD, 16));
-		lblEmail.setBounds(20, 232, 100, 20);
-		infoPanel.add(lblEmail);
+        btnChamDiem.addActionListener(buttonHighlight);
+        btnGiaoBai.addActionListener(buttonHighlight);
+        btnDiemDanh.addActionListener(buttonHighlight);
 
-		JLabel lblEmailValue = new JLabel("nguyenvana@example.com");
-		lblEmailValue.setForeground(Color.WHITE);
-		lblEmailValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblEmailValue.setBounds(130, 232, 200, 20);
-		infoPanel.add(lblEmailValue);
-	}
+        btnSua.addActionListener(new ActionListener() {
+            private boolean isEditing = false;
+            private final Color defaultColor = UIManager.getColor("Button.background");
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton btn = (JButton) e.getSource();
+
+                if (!isEditing) {
+                    textField.setEditable(true);
+                    textField_1.setEditable(true);
+                    textField_2.setEditable(true);
+                    textField_3.setEditable(true);
+                    textField_4.setEditable(true);
+                    textField_5.setEditable(true);
+
+                    btn.setText("Lưu");
+                    btn.setBackground(Color.YELLOW);
+                    isEditing = true;
+                } else {
+                    if (textField.getText().isEmpty() || textField_1.getText().isEmpty() ||
+                        textField_2.getText().isEmpty() || textField_3.getText().isEmpty() ||
+                        textField_4.getText().isEmpty() || textField_5.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(ThongTinGiangVien.this, "Vui lòng nhập đầy đủ thông tin.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    giangVien.setHoTen(textField.getText());
+                    giangVien.setMaGV(textField_1.getText());
+                    giangVien.setEmail(textField_2.getText());
+                    giangVien.setSoDienThoai(textField_3.getText());
+                    giangVien.setMonGiangDay(textField_4.getText());
+                    giangVien.setMaMon(textField_5.getText());
+
+                    textField.setEditable(false);
+                    textField_1.setEditable(false);
+                    textField_2.setEditable(false);
+                    textField_3.setEditable(false);
+                    textField_4.setEditable(false);
+                    textField_5.setEditable(false);
+
+                    btn.setText("Sửa");
+                    btn.setBackground(defaultColor);
+                    isEditing = false;
+
+                    JOptionPane.showMessageDialog(ThongTinGiangVien.this, "Thông tin đã được lưu!");
+                }
+            }
+        });
+
+        buttonPanel.add(btnSua);
+        buttonPanel.add(btnChamDiem);
+        buttonPanel.add(btnGiaoBai);
+        buttonPanel.add(btnDiemDanh);
+    }
 }
