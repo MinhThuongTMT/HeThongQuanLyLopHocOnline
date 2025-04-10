@@ -11,6 +11,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -223,6 +227,25 @@ public class SignUp extends JFrame {
 	}
 
 	private boolean saveUser(String username, String password) {
-		return true;
+		String url = "jdbc:mysql://localhost:3306/userdb";
+		String dbUsername = "root";
+		String dbPassword = "0808";
+
+		String query = "INSERT INTO users (username, password) VALUES (?, ?)";
+
+		try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+				PreparedStatement stmt = conn.prepareStatement(query)) {
+			stmt.setString(1, username);
+			stmt.setString(2, password); // Lưu ý: Nên mã hóa mật khẩu trong thực tế
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1062) { // Duplicate entry error code
+				return false;
+			} else {
+				e.printStackTrace();
+				return false;
+			}
+		}
 	}
 }
