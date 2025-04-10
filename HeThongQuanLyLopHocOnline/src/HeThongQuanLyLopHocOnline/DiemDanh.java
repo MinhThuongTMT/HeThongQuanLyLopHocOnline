@@ -3,137 +3,88 @@ package HeThongQuanLyLopHocOnline;
 import java.awt.EventQueue;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.nio.file.Files;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class ChamDiem extends JFrame {
+public class DiemDanh extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
     private JTextField txtBuoi, txtGiaoVien, txtThoiGian, txtCoSo, txtSySo;
-    private ArrayList<JTextField> diemFields = new ArrayList<>();
+    private ArrayList<JCheckBox> checkboxes = new ArrayList<>();
+    private String[] hocViens = {"Học Viên 01", "Học Viên 02", "Học Viên 03", "Học Viên 04", "Học Viên 05"};
 
-    private String[] hocViens = {
-        "Nguyễn Văn A", "Trần Thị B", "Lê Văn C",
-        "Phạm Thị D", "Hoàng Văn E"
-    };
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                ChamDiem frame = new ChamDiem();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public ChamDiem() {
-        setTitle("Chấm điểm");
+    public DiemDanh() {
+        setTitle("Điểm Danh Lớp Học");
+        setSize(450, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 550, 500);
-        contentPane = new JPanel();
-        contentPane.setBackground(new Color(0, 0, 160));
-        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
+        setLocationRelativeTo(null);
 
-        JLabel lblBuoi = new JLabel("Buổi học:");
-        lblBuoi.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblBuoi.setForeground(new Color(255, 255, 0));
-        lblBuoi.setBackground(new Color(255, 255, 0));
-        lblBuoi.setBounds(10, 10, 100, 20);
-        contentPane.add(lblBuoi);
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBackground(new Color(0, 0, 160));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        txtBuoi = new JTextField();
+        // Panel nhập thông tin lớp học
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+        inputPanel.setBackground(new Color(255, 255, 255));
+        txtBuoi = new JTextField();        // để trống
         txtBuoi.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        txtBuoi.setBounds(120, 10, 200, 20);
-        contentPane.add(txtBuoi);
-
-        JLabel lblGiaoVien = new JLabel("Giáo viên:");
-        lblGiaoVien.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblGiaoVien.setBackground(new Color(255, 255, 0));
-        lblGiaoVien.setForeground(new Color(255, 255, 0));
-        lblGiaoVien.setBounds(10, 40, 100, 20);
-        contentPane.add(lblGiaoVien);
-
-        txtGiaoVien = new JTextField();
+        txtGiaoVien = new JTextField();    // để trống
         txtGiaoVien.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        txtGiaoVien.setBounds(120, 40, 200, 20);
-        contentPane.add(txtGiaoVien);
-
-        JLabel lblThoiGian = new JLabel("Thời gian:");
-        lblThoiGian.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblThoiGian.setForeground(new Color(255, 255, 0));
-        lblThoiGian.setBackground(new Color(255, 255, 0));
-        lblThoiGian.setBounds(10, 70, 100, 20);
-        contentPane.add(lblThoiGian);
-
-        txtThoiGian = new JTextField();
+        txtThoiGian = new JTextField();    // để trống
         txtThoiGian.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        txtThoiGian.setBounds(120, 70, 200, 20);
-        contentPane.add(txtThoiGian);
-
-        JLabel lblCoSo = new JLabel("Cơ sở:");
-        lblCoSo.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblCoSo.setForeground(new Color(255, 255, 0));
-        lblCoSo.setBackground(new Color(255, 255, 0));
-        lblCoSo.setBounds(10, 100, 100, 20);
-        contentPane.add(lblCoSo);
-
-        txtCoSo = new JTextField();
+        txtCoSo = new JTextField();        // để trống
         txtCoSo.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        txtCoSo.setBounds(120, 100, 200, 20);
-        contentPane.add(txtCoSo);
-
-        JLabel lblSySo = new JLabel("Sĩ số:");
-        lblSySo.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblSySo.setBackground(new Color(255, 255, 0));
-        lblSySo.setForeground(new Color(255, 255, 0));
-        lblSySo.setBounds(10, 130, 100, 20);
-        contentPane.add(lblSySo);
-
-        txtSySo = new JTextField();
+        txtSySo = new JTextField();        // để trống
         txtSySo.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        txtSySo.setBounds(120, 130, 200, 20);
-        contentPane.add(txtSySo);
 
-        JLabel lblDanhSach = new JLabel("Danh sách học viên:");
-        lblDanhSach.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        lblDanhSach.setForeground(new Color(255, 255, 0));
-        lblDanhSach.setBackground(new Color(255, 255, 0));
-        lblDanhSach.setBounds(10, 170, 200, 20);
-        contentPane.add(lblDanhSach);
+        JLabel label = new JLabel("Buổi học:");
+        label.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        inputPanel.add(label);
+        inputPanel.add(txtBuoi);
+        JLabel label_1 = new JLabel("Giáo viên:");
+        label_1.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        inputPanel.add(label_1);
+        inputPanel.add(txtGiaoVien);
+        JLabel label_2 = new JLabel("Thời gian:");
+        label_2.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        inputPanel.add(label_2);
+        inputPanel.add(txtThoiGian);
+        JLabel label_3 = new JLabel("Cơ sở:");
+        label_3.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        inputPanel.add(label_3);
+        inputPanel.add(txtCoSo);
+        JLabel label_4 = new JLabel("Sĩ số:");
+        label_4.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        inputPanel.add(label_4);
+        inputPanel.add(txtSySo);
 
-        JPanel panelHocVien = new JPanel();
-        panelHocVien.setLayout(new GridLayout(hocViens.length, 2, 5, 5));
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
 
-        for (String hv : hocViens) {
-            JLabel lbl = new JLabel(hv);
-            JTextField txt = new JTextField();
-            diemFields.add(txt);
-            panelHocVien.add(lbl);
-            panelHocVien.add(txt);
+        // Danh sách học viên
+        JPanel danhSachPanel = new JPanel();
+        danhSachPanel.setBackground(new Color(255, 255, 255));
+        danhSachPanel.setLayout(new BoxLayout(danhSachPanel, BoxLayout.Y_AXIS));
+
+        for (String hocVien : hocViens) {
+            JCheckBox checkBox = new JCheckBox(hocVien);
+            checkboxes.add(checkBox);
+            danhSachPanel.add(checkBox);
         }
 
-        JScrollPane scrollPane = new JScrollPane(panelHocVien);
-        scrollPane.setBounds(10, 200, 500, 170);
-        contentPane.add(scrollPane);
+        JScrollPane scrollPane = new JScrollPane(danhSachPanel);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        JButton btnLuu = new JButton("Lưu điểm");
-        btnLuu.setFont(new Font("Times New Roman", Font.BOLD, 11));
-        btnLuu.setBackground(new Color(255, 255, 0));
-        btnLuu.setBounds(400, 400, 100, 30);
-        btnLuu.addActionListener(this::xuLyChamDiem);
-        contentPane.add(btnLuu);
+        // Nút xác nhận điểm danh
+        JButton btnXacNhan = new JButton("Xác nhận điểm danh");
+        btnXacNhan.setFont(new Font("Times New Roman", Font.BOLD, 11));
+        btnXacNhan.setBackground(new Color(255, 255, 0));
+        btnXacNhan.addActionListener(e -> xuLyDiemDanh());
+        mainPanel.add(btnXacNhan, BorderLayout.SOUTH);
+
+        getContentPane().add(mainPanel);
     }
 
-    private void xuLyChamDiem(ActionEvent e) {
+    private void xuLyDiemDanh() {
         String buoi = txtBuoi.getText().trim();
         String giaoVien = txtGiaoVien.getText().trim();
         String thoiGian = txtThoiGian.getText().trim();
@@ -150,27 +101,19 @@ public class ChamDiem extends JFrame {
           .append("Buổi: ").append(buoi).append("\n")
           .append("Giáo viên: ").append(giaoVien).append("\n")
           .append("Thời gian: ").append(thoiGian).append("\n")
-          .append("Cơ sở: ").append(coSo).append(" | Sỹ số: ").append(sySo).append("\n\n")
-          .append("📌 Kết quả chấm điểm:\n");
+          .append("Cơ sở: ").append(coSo).append(" | Sỹ số: ").append(sySo).append("\n\n");
 
+        sb.append("📌 Danh sách điểm danh:\n");
         for (int i = 0; i < hocViens.length; i++) {
-            String diem = diemFields.get(i).getText().trim();
-            if (diem.isEmpty()) diem = "(Chưa chấm)";
-            sb.append(hocViens[i]).append(": ").append(diem).append("\n");
+            sb.append(hocViens[i])
+              .append(": ")
+              .append(checkboxes.get(i).isSelected() ? "✅ Có mặt\n" : "❌ Vắng mặt\n");
         }
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Chọn nơi lưu file chấm điểm");
-        int userSelection = fileChooser.showSaveDialog(this);
+        JOptionPane.showMessageDialog(this, sb.toString(), "Kết quả điểm danh", JOptionPane.INFORMATION_MESSAGE);
+    }
 
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            try {
-                Files.write(fileToSave.toPath(), sb.toString().getBytes());
-                JOptionPane.showMessageDialog(this, "💾 Đã lưu file thành công:\n" + fileToSave.getAbsolutePath(), "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "❌ Lỗi khi lưu file:\n" + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new DiemDanh().setVisible(true));
     }
 }
