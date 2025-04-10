@@ -1,25 +1,24 @@
 package HeThongQuanLyLopHocOnline;
 
-import java.awt.EventQueue;
-
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import com.toedter.calendar.JDateChooser;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File; 
-import javax.swing.JFileChooser;
-import java.text.SimpleDateFormat;
-import javax.swing.JOptionPane;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.SimpleDateFormat;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import com.toedter.calendar.JDateChooser;
 
 public class GiaoBaiTap extends JFrame {
 
@@ -145,11 +144,8 @@ public class GiaoBaiTap extends JFrame {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				String hanNop = sdf.format(dateChooser.getDate());
 
-				String thongBao = "📌 Bài tập đã được gửi!\n\n"
-						+ "Tiêu đề: " + tieuDe + "\n"
-						+ "Giáo viên: " + giaoVien + "\n"
-						+ "Hạn nộp: " + hanNop + "\n"
-						+ "File: " + fileName;
+				String thongBao = "📌 Bài tập đã được gửi!\n\n" + "Tiêu đề: " + tieuDe + "\n" + "Giáo viên: " + giaoVien
+						+ "\n" + "Hạn nộp: " + hanNop + "\n" + "File: " + fileName;
 
 				JOptionPane.showMessageDialog(null, thongBao);
 			}
