@@ -2,13 +2,15 @@ package HeThongQuanLyLopHocOnline;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +18,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class QuanLySinhVien extends JFrame {
 
@@ -32,9 +42,6 @@ public class QuanLySinhVien extends JFrame {
 	private JTextField txtChuyenNganh;
 	private JTextField txtEmail;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -48,28 +55,23 @@ public class QuanLySinhVien extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public QuanLySinhVien() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 700); // Kích thước lớn hơn để chứa bảng và các thành phần
+		setBounds(100, 100, 900, 700);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 121)); // Màu nền đồng bộ với QuanLyGiangVien
+		contentPane.setBackground(new Color(0, 0, 121));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null); // Sử dụng layout null để định vị thủ công
+		contentPane.setLayout(null);
 		setContentPane(contentPane);
 
-		// Tiêu đề
 		JLabel lblTitle = new JLabel("QUẢN LÝ SINH VIÊN");
-		lblTitle.setFont(new Font("Times New Roman", Font.BOLD, 25));
+		lblTitle.setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 25));
 		lblTitle.setForeground(Color.WHITE);
 		lblTitle.setBounds(300, 10, 300, 40);
 		contentPane.add(lblTitle);
 
-		// Khu vực nhập liệu
 		JLabel lblMaSV = new JLabel("Mã Sinh Viên:");
-		lblMaSV.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblMaSV.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblMaSV.setForeground(Color.WHITE);
 		lblMaSV.setBounds(50, 60, 100, 25);
 		contentPane.add(lblMaSV);
@@ -79,7 +81,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtMaSV);
 
 		JLabel lblTenSV = new JLabel("Tên Sinh Viên:");
-		lblTenSV.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblTenSV.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblTenSV.setForeground(Color.WHITE);
 		lblTenSV.setBounds(50, 95, 100, 25);
 		contentPane.add(lblTenSV);
@@ -89,7 +91,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtTenSV);
 
 		JLabel lblNgaySinh = new JLabel("Ngày Sinh:");
-		lblNgaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblNgaySinh.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblNgaySinh.setForeground(Color.WHITE);
 		lblNgaySinh.setBounds(50, 130, 100, 25);
 		contentPane.add(lblNgaySinh);
@@ -99,7 +101,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtNgaySinh);
 
 		JLabel lblGioiTinh = new JLabel("Giới Tính:");
-		lblGioiTinh.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblGioiTinh.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblGioiTinh.setForeground(Color.WHITE);
 		lblGioiTinh.setBounds(400, 60, 100, 25);
 		contentPane.add(lblGioiTinh);
@@ -109,7 +111,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtGioiTinh);
 
 		JLabel lblLop = new JLabel("Lớp:");
-		lblLop.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblLop.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblLop.setForeground(Color.WHITE);
 		lblLop.setBounds(400, 95, 100, 25);
 		contentPane.add(lblLop);
@@ -119,7 +121,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtLop);
 
 		JLabel lblChuyenNganh = new JLabel("Chuyên Ngành:");
-		lblChuyenNganh.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblChuyenNganh.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblChuyenNganh.setForeground(Color.WHITE);
 		lblChuyenNganh.setBounds(400, 130, 100, 25);
 		contentPane.add(lblChuyenNganh);
@@ -129,7 +131,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(txtChuyenNganh);
 
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblEmail.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		lblEmail.setForeground(Color.WHITE);
 		lblEmail.setBounds(50, 165, 100, 25);
 		contentPane.add(lblEmail);
@@ -138,9 +140,8 @@ public class QuanLySinhVien extends JFrame {
 		txtEmail.setBounds(150, 165, 200, 25);
 		contentPane.add(txtEmail);
 
-		// Khu vực nút chức năng
 		JButton btnAdd = new JButton("THÊM");
-		btnAdd.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnAdd.setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 14));
 		btnAdd.setBackground(new Color(255, 204, 0));
 		btnAdd.setForeground(Color.BLACK);
 		btnAdd.setBounds(750, 60, 100, 30);
@@ -152,7 +153,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(btnAdd);
 
 		JButton btnEdit = new JButton("SỬA");
-		btnEdit.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnEdit.setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 14));
 		btnEdit.setBackground(new Color(255, 204, 0));
 		btnEdit.setForeground(Color.BLACK);
 		btnEdit.setBounds(750, 100, 100, 30);
@@ -164,7 +165,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(btnEdit);
 
 		JButton btnDelete = new JButton("XÓA");
-		btnDelete.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnDelete.setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 14));
 		btnDelete.setBackground(new Color(255, 204, 0));
 		btnDelete.setForeground(Color.BLACK);
 		btnDelete.setBounds(750, 140, 100, 30);
@@ -176,7 +177,7 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(btnDelete);
 
 		JButton btnExport = new JButton("XUẤT EXCEL");
-		btnExport.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnExport.setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 14));
 		btnExport.setBackground(new Color(0, 255, 0));
 		btnExport.setForeground(Color.WHITE);
 		btnExport.setBounds(692, 180, 158, 30);
@@ -187,20 +188,17 @@ public class QuanLySinhVien extends JFrame {
 		});
 		contentPane.add(btnExport);
 
-		// Bảng danh sách sinh viên
 		String[] columnNames = { "Mã SV", "Tên", "Ngày Sinh", "Giới Tính", "Lớp", "Chuyên Ngành", "Email" };
 		tableModel = new DefaultTableModel(columnNames, 0);
 		table = new JTable(tableModel);
-		table.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		table.setFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 		table.setRowHeight(25);
-		table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14));
+		table.getTableHeader().setFont(new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 14));
 		table.getTableHeader().setBackground(new Color(255, 204, 0));
 		table.getTableHeader().setForeground(Color.BLACK);
 
-		// Thêm dữ liệu mẫu
 		addSampleData();
 
-		// Khi nhấp vào bảng, điền thông tin vào các trường nhập liệu
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -222,7 +220,6 @@ public class QuanLySinhVien extends JFrame {
 		contentPane.add(scrollPane);
 	}
 
-	// Thêm dữ liệu mẫu
 	private void addSampleData() {
 		Object[] row1 = { "SV001", "Nguyễn Văn A", "01/01/2000", "Nam", "Lớp 1", "CNTT", "nguyenvana@edu.vn" };
 		Object[] row2 = { "SV002", "Trần Thị B", "02/02/2000", "Nữ", "Lớp 2", "Kinh Tế", "tranthib@edu.vn" };
@@ -232,7 +229,6 @@ public class QuanLySinhVien extends JFrame {
 		tableModel.addRow(row3);
 	}
 
-	// Logic thêm sinh viên
 	private void addNewStudent() {
 		String maSV = txtMaSV.getText();
 		String tenSV = txtTenSV.getText();
@@ -253,7 +249,6 @@ public class QuanLySinhVien extends JFrame {
 		clearFields();
 	}
 
-	// Logic sửa sinh viên
 	private void editStudent() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow >= 0) {
@@ -285,7 +280,6 @@ public class QuanLySinhVien extends JFrame {
 		}
 	}
 
-	// Logic xóa sinh viên
 	private void deleteStudent() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow >= 0) {
@@ -300,12 +294,62 @@ public class QuanLySinhVien extends JFrame {
 		}
 	}
 
-	// Logic xuất Excel (chỉ là placeholder)
 	private void exportToExcel() {
-		javax.swing.JOptionPane.showMessageDialog(this, "Chức năng xuất Excel đang được phát triển!");
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Excel files (*.xlsx)", "xlsx"));
+
+		int userSelection = fileChooser.showSaveDialog(this);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			if (!filePath.toLowerCase().endsWith(".xlsx")) {
+				filePath += ".xlsx";
+			}
+
+			try (Workbook workbook = new XSSFWorkbook()) {
+				Sheet sheet = workbook.createSheet("Danh sách sinh viên");
+
+				Row headerRow = sheet.createRow(0);
+				String[] columns = { "Mã SV", "Tên", "Ngày Sinh", "Giới Tính", "Lớp", "Chuyên Ngành", "Email" };
+				for (int i = 0; i < columns.length; i++) {
+					Cell cell = headerRow.createCell(i);
+					cell.setCellValue(columns[i]);
+					CellStyle headerStyle = workbook.createCellStyle();
+					org.apache.poi.ss.usermodel.Font font = workbook.createFont();
+					font.setBold(true);
+					headerStyle.setFont(font);
+					cell.setCellStyle(headerStyle);
+				}
+
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					Row row = sheet.createRow(i + 1);
+					for (int j = 0; j < tableModel.getColumnCount(); j++) {
+						Cell cell = row.createCell(j);
+						Object value = tableModel.getValueAt(i, j);
+						if (value != null) {
+							cell.setCellValue(value.toString());
+						}
+					}
+				}
+
+				for (int i = 0; i < columns.length; i++) {
+					sheet.autoSizeColumn(i);
+				}
+
+				try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+					workbook.write(fileOut);
+					javax.swing.JOptionPane.showMessageDialog(this, "Xuất file Excel thành công tại: " + filePath);
+				}
+
+			} catch (IOException ex) {
+				javax.swing.JOptionPane.showMessageDialog(this, "Lỗi khi xuất file Excel: " + ex.getMessage(), "Lỗi",
+						javax.swing.JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
+			}
+		}
 	}
 
-	// Xóa các trường nhập liệu
 	private void clearFields() {
 		txtMaSV.setText("");
 		txtTenSV.setText("");
