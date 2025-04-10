@@ -11,6 +11,11 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,6 +36,11 @@ public class Login extends JFrame {
 	private JTextField textFieldUsername;
 	private JPasswordField passwordField;
 
+	// Thông tin kết nối database
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/userdb";
+	private static final String DB_USERNAME = "root";
+	private static final String DB_PASSWORD = "0808";
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -43,13 +53,13 @@ public class Login extends JFrame {
 	}
 
 	public Login() {
+		// Giữ nguyên phần giao diện của bạn
 		setTitle("Đăng Nhập Hệ Thống");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 500);
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		// Panel nền với gradient
 		contentPane = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -66,7 +76,6 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		// Panel chứa form
 		JPanel formPanel = new JPanel();
 		formPanel.setBounds(150, 40, 450, 400);
 		formPanel.setBackground(new Color(255, 255, 255, 230));
@@ -74,14 +83,12 @@ public class Login extends JFrame {
 		formPanel.setLayout(null);
 		contentPane.add(formPanel);
 
-		// Tiêu đề
 		JLabel lblTitle = new JLabel("ĐĂNG NHẬP", SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 32));
 		lblTitle.setForeground(new Color(25, 25, 112));
 		lblTitle.setBounds(0, 48, 450, 50);
 		formPanel.add(lblTitle);
 
-		// Username
 		JLabel lblUsername = new JLabel("Tên đăng nhập:");
 		lblUsername.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblUsername.setBounds(50, 118, 120, 25);
@@ -93,7 +100,6 @@ public class Login extends JFrame {
 		textFieldUsername.setBorder(new LineBorder(new Color(169, 169, 169), 1, true));
 		formPanel.add(textFieldUsername);
 
-		// Password
 		JLabel lblPassword = new JLabel("Mật khẩu:");
 		lblPassword.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblPassword.setBounds(50, 193, 120, 25);
@@ -110,7 +116,6 @@ public class Login extends JFrame {
 		setupEyeButton(btnShowPassword, passwordField, "/Icon/eye_close.png");
 		formPanel.add(btnShowPassword);
 
-		// Nút Đăng nhập
 		JButton btnLogin = new JButton("Đăng Nhập");
 		btnLogin.setFont(new Font("Arial", Font.BOLD, 16));
 		btnLogin.setBackground(new Color(65, 105, 225));
@@ -122,7 +127,6 @@ public class Login extends JFrame {
 		btnLogin.addActionListener(e -> handleLogin());
 		formPanel.add(btnLogin);
 
-		// Nút Đăng ký
 		JButton btnSignUp = new JButton("Đăng Ký");
 		btnSignUp.setFont(new Font("Arial", Font.BOLD, 16));
 		btnSignUp.setBackground(new Color(70, 130, 180));
@@ -137,7 +141,6 @@ public class Login extends JFrame {
 		});
 		formPanel.add(btnSignUp);
 
-		// Nút Quên mật khẩu
 		JButton btnForgot = new JButton("Quên mật khẩu?");
 		btnForgot.setFont(new Font("Arial", Font.ITALIC, 13));
 		btnForgot.setForeground(new Color(65, 105, 225));
@@ -149,6 +152,45 @@ public class Login extends JFrame {
 		formPanel.add(btnForgot);
 	}
 
+	// Phương thức kiểm tra đăng nhập với database
+	private boolean checkLogin(String username, String password) {
+		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(query)) {
+
+			stmt.setString(1, username);
+			stmt.setString(2, password); // Lưu ý: Trong thực tế nên mã hóa mật khẩu
+
+			ResultSet rs = stmt.executeQuery();
+			return rs.next(); // Trả về true nếu tìm thấy bản ghi khớp
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Lỗi kết nối database!");
+			return false;
+		}
+	}
+
+	private void handleLogin() {
+		String username = textFieldUsername.getText().trim();
+		String password = new String(passwordField.getPassword());
+
+		if (username.isEmpty() || password.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!");
+			return;
+		}
+
+		if (checkLogin(username, password)) {
+			JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+			dispose();
+			new TrangChu().setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!");
+		}
+	}
+
+	// Các phương thức hỗ trợ khác giữ nguyên
 	private void setupEyeButton(JButton button, JPasswordField passwordField, String initialIconPath) {
 		button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		button.setBorderPainted(false);
@@ -193,18 +235,6 @@ public class Login extends JFrame {
 				button.setBackground(originalColor);
 			}
 		});
-	}
-
-	private void handleLogin() {
-		String username = textFieldUsername.getText();
-		String password = new String(passwordField.getPassword());
-		if (username.isEmpty() || password.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!");
-		} else {
-			JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-			dispose();
-			new TrangChu().setVisible(true);
-		}
 	}
 
 	private void handleForgotPassword() {
