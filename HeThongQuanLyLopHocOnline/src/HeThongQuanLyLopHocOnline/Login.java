@@ -16,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,9 +38,9 @@ public class Login extends JFrame {
 	private JPasswordField passwordField;
 
 	// Thông tin kết nối database
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/userdb";
-	private static final String DB_USERNAME = "root";
-	private static final String DB_PASSWORD = "0808";
+	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
+	private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
+	private static final String DB_PASSWORD = "MinhThuong0808";
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -53,7 +54,9 @@ public class Login extends JFrame {
 	}
 
 	public Login() {
-		// Giữ nguyên phần giao diện của bạn
+		// Khởi tạo bảng users khi khởi động
+		initDatabase();
+
 		setTitle("Đăng Nhập Hệ Thống");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 500);
@@ -152,7 +155,34 @@ public class Login extends JFrame {
 		formPanel.add(btnForgot);
 	}
 
-	// Phương thức kiểm tra đăng nhập với database
+	private void initDatabase() {
+		try {
+			// Load driver PostgreSQL
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Không tìm thấy driver PostgreSQL!");
+			return;
+		}
+
+		String createTableSQL = """
+				CREATE TABLE IF NOT EXISTS users (
+				    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+				    username TEXT UNIQUE NOT NULL,
+				    password TEXT NOT NULL,
+				    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+				)
+				""";
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement()) {
+			stmt.execute(createTableSQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Lỗi khi tạo bảng users: " + e.getMessage());
+		}
+	}
+
 	private boolean checkLogin(String username, String password) {
 		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
@@ -190,7 +220,6 @@ public class Login extends JFrame {
 		}
 	}
 
-	// Các phương thức hỗ trợ khác giữ nguyên
 	private void setupEyeButton(JButton button, JPasswordField passwordField, String initialIconPath) {
 		button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		button.setBorderPainted(false);
