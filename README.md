@@ -10,6 +10,8 @@
 
 - Xong việc tìm kiếm sinh viên theo MSSV
 
+- Xong xuất ra file Excel
+
 ## 2. SinhVien.java
 
 - Xong việc lưu thông tin sinh viên lên Database
