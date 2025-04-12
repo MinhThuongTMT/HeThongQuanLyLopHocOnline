@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,6 +37,11 @@ public class SignUp extends JFrame {
 	private JPasswordField passwordField;
 	private JPasswordField confirmPasswordField;
 
+	// Thông tin kết nối database
+	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
+	private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
+	private static final String DB_PASSWORD = "MinhThuong0808";
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -48,6 +54,9 @@ public class SignUp extends JFrame {
 	}
 
 	public SignUp() {
+		// Khởi tạo bảng users khi khởi động
+		initDatabase();
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 750, 500);
 		setLocationRelativeTo(null);
@@ -160,6 +169,34 @@ public class SignUp extends JFrame {
 		formPanel.add(btnBackToLogin);
 	}
 
+	private void initDatabase() {
+		try {
+			// Load driver PostgreSQL
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Không tìm thấy driver PostgreSQL!");
+			return;
+		}
+
+		String createTableSQL = """
+				CREATE TABLE IF NOT EXISTS users (
+				    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+				    username TEXT UNIQUE NOT NULL,
+				    password TEXT NOT NULL,
+				    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+				)
+				""";
+
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement()) {
+			stmt.execute(createTableSQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Lỗi khi tạo bảng users: " + e.getMessage());
+		}
+	}
+
 	private void setupEyeButton(JButton button, JPasswordField passwordField, String initialIconPath) {
 		button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		button.setBorderPainted(false);
@@ -207,7 +244,7 @@ public class SignUp extends JFrame {
 	}
 
 	private void handleSignUp() {
-		String username = textFieldUsername.getText();
+		String username = textFieldUsername.getText().trim();
 		String password = new String(passwordField.getPassword());
 		String confirmPassword = new String(confirmPasswordField.getPassword());
 
@@ -227,23 +264,20 @@ public class SignUp extends JFrame {
 	}
 
 	private boolean saveUser(String username, String password) {
-		String url = "jdbc:mysql://localhost:3306/userdb";
-		String dbUsername = "root";
-		String dbPassword = "0808";
-
 		String query = "INSERT INTO users (username, password) VALUES (?, ?)";
 
-		try (Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setString(1, username);
 			stmt.setString(2, password); // Lưu ý: Nên mã hóa mật khẩu trong thực tế
 			stmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) { // Duplicate entry error code
+			if (e.getSQLState().equals("23505")) { // Lỗi unique constraint violation trong PostgreSQL
 				return false;
 			} else {
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Lỗi kết nối database!");
 				return false;
 			}
 		}
