@@ -315,6 +315,18 @@ public class ThongTinGiangVien extends JFrame {
 		btnChamDiem.setBorder(new LineBorder(Color.WHITE, 1));
 		ThongTinGiangVienPanel.add(btnChamDiem);
 
+		btnChamDiem.addActionListener(e -> {
+			String hoTen = HoTen_text1.getText();
+			String monGiangDay = (String) Mon_ComboBox.getSelectedItem();
+			ChamDiem chamDiemPanel = new ChamDiem();
+			JFrame chamDiemFrame = new JFrame("Chấm Điểm");
+			chamDiemFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			chamDiemFrame.setBounds(100, 100, 911, 690);
+			chamDiemFrame.add(chamDiemPanel);
+			chamDiemFrame.setLocationRelativeTo(null);
+			chamDiemFrame.setVisible(true);
+		});
+
 		JButton btnGiaoBai = new JButton("GIAO BÀI");
 		btnGiaoBai.setBackground(new Color(255, 215, 0));
 		btnGiaoBai.setFont(new Font("Times New Roman", Font.BOLD, 15));
