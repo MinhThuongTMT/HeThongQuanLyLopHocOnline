@@ -47,6 +47,8 @@ public class GiangVien extends JPanel {
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@ptithcm\\.edu\\.vn$");
 	// Regex cho số điện thoại (10 số, bắt đầu bằng 0)
 	private static final Pattern PHONE_PATTERN = Pattern.compile("^0\\d{9}$");
+	// Regex cho mã giảng viên (GV + 3 số)
+	private static final Pattern MAGV_PATTERN = Pattern.compile("^GV\\d{3}$");
 
 	public GiangVien() {
 		// Tạo bảng giang_vien khi khởi tạo
@@ -173,6 +175,13 @@ public class GiangVien extends JPanel {
 						|| monGiangDay.isEmpty() || maMon.isEmpty()) {
 					JOptionPane.showMessageDialog(GiangVien.this, "Vui lòng điền đầy đủ tất cả các thông tin!", "Lỗi",
 							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				// Kiểm tra định dạng mã giảng viên
+				if (!MAGV_PATTERN.matcher(maGV).matches()) {
+					JOptionPane.showMessageDialog(GiangVien.this,
+							"Mã giảng viên phải có định dạng GV + 3 số (VD: GV123)!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
