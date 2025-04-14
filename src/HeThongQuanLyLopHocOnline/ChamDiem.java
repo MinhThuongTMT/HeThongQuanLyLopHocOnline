@@ -1,4 +1,4 @@
-package HeThongQuanLyLopHocOnline;
+package QuanLyLopHoc;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -12,12 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -36,13 +33,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ChamDiem extends JPanel {
+public class ChamDiem extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JComboBox<String> monHocComboBox;
-	private JComboBox<String> lopComboBox;
 	private JTable table;
 	private DefaultTableModel tableModel;
+	private JTextField Mon_text;
 
 	// Thông tin kết nối database
 	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true&prepareThreshold=0";
@@ -50,60 +46,47 @@ public class ChamDiem extends JPanel {
 	private static final String DB_PASSWORD = "MinhThuong0808";
 
 	public ChamDiem() {
-		setBackground(new Color(0, 0, 121));
-		setBounds(81, 11, 895, 652);
-		setLayout(null);
+		this("");
+	}
 
-		// Tạo bảng diem nếu chưa tồn tại
+	public ChamDiem(String monGiangDay) {
+		setTitle("Chấm Điểm - " + monGiangDay);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 911, 690);
+		setLocationRelativeTo(null);
+
+		JPanel contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 0, 121));
+		contentPane.setLayout(null);
+		setContentPane(contentPane);
+
 		createTableIfNotExists();
 
-		// Tiêu đề
 		JLabel lblTitle = new JLabel("CHẤM ĐIỂM");
 		lblTitle.setFont(new Font("Times New Roman", Font.BOLD, 25));
 		lblTitle.setForeground(new Color(255, 255, 255));
 		lblTitle.setBounds(350, 10, 200, 40);
-		add(lblTitle);
+		contentPane.add(lblTitle);
 
-		// Nhãn và ComboBox Môn học
 		JLabel lblMonHoc = new JLabel("MÔN HỌC:");
 		lblMonHoc.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblMonHoc.setForeground(new Color(255, 255, 255));
 		lblMonHoc.setBounds(50, 70, 100, 30);
-		add(lblMonHoc);
+		contentPane.add(lblMonHoc);
 
-		monHocComboBox = new JComboBox<>();
-		monHocComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "", "Cảm Biến", "Java", "Android" }));
-		monHocComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		monHocComboBox.setBounds(150, 70, 200, 30);
-		add(monHocComboBox);
-
-		// Nhãn và ComboBox Lớp
-		JLabel lblLop = new JLabel("LỚP:");
-		lblLop.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblLop.setForeground(new Color(255, 255, 255));
-		lblLop.setBounds(400, 70, 100, 30);
-		add(lblLop);
-
-		lopComboBox = new JComboBox<>();
-		lopComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lopComboBox.setBounds(500, 70, 200, 30);
-		loadLopComboBox(); // Tải danh sách lớp từ database
-		add(lopComboBox);
-
-		// Nút Tìm kiếm
 		JButton btnTimKiem = new JButton("TÌM KIẾM");
-		btnTimKiem.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnTimKiem.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnTimKiem.setBackground(new Color(255, 204, 0));
 		btnTimKiem.setForeground(Color.BLACK);
-		btnTimKiem.setBounds(750, 70, 100, 30);
-		add(btnTimKiem);
+		btnTimKiem.setBounds(734, 70, 111, 30);
+		contentPane.add(btnTimKiem);
 
-		// Bảng danh sách sinh viên
-		String[] columnNames = { "MSSV", "Họ Tên", "Lớp", "Môn Học", "Điểm" };
+		String[] columnNames = { "MSSV", "Họ Tên", "Lớp", "Thời gian nộp", "Tên Tệp", "Điểm chuyên cần", "Điểm 15",
+				"Điểm giữa kỳ", "Điểm cuối kỳ" };
 		tableModel = new DefaultTableModel(columnNames, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 4; // Chỉ cho phép chỉnh sửa cột Điểm
+				return column >= 5; // Cho phép chỉnh sửa các cột điểm
 			}
 		};
 		table = new JTable(tableModel);
@@ -114,246 +97,246 @@ public class ChamDiem extends JPanel {
 		table.getTableHeader().setForeground(Color.BLACK);
 
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(25, 120, 848, 400);
-		add(scrollPane);
+		scrollPane.setBounds(21, 120, 852, 447);
+		contentPane.add(scrollPane);
 
-		// Nút LƯU
 		JButton btnLuu = new JButton("LƯU");
-		btnLuu.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnLuu.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnLuu.setBackground(new Color(255, 140, 0));
 		btnLuu.setForeground(Color.BLACK);
-		btnLuu.setBounds(227, 569, 120, 44);
-		add(btnLuu);
+		btnLuu.setBounds(227, 585, 120, 44);
+		contentPane.add(btnLuu);
 
-		// Nút XUẤT EXCEL
 		JButton btnXuat = new JButton("XUẤT EXCEL");
-		btnXuat.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		btnXuat.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		btnXuat.setBackground(new Color(0, 204, 0));
-		btnXuat.setForeground(Color.WHITE);
-		btnXuat.setBounds(561, 569, 120, 44);
-		add(btnXuat);
+		btnXuat.setForeground(new Color(0, 0, 0));
+		btnXuat.setBounds(539, 585, 139, 44);
+		contentPane.add(btnXuat);
 
-		// Sự kiện cho nút Tìm kiếm
+		Mon_text = new JTextField(monGiangDay);
+		Mon_text.setForeground(Color.BLACK);
+		Mon_text.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		Mon_text.setEditable(false);
+		Mon_text.setBounds(147, 70, 269, 31);
+		contentPane.add(Mon_text);
+
+		JButton btnDiemDanh = new JButton("ĐIỂM DANH");
+		btnDiemDanh.setForeground(Color.BLACK);
+		btnDiemDanh.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		btnDiemDanh.setBackground(new Color(255, 204, 0));
+		btnDiemDanh.setBounds(562, 70, 133, 30);
+		contentPane.add(btnDiemDanh);
+
 		btnTimKiem.addActionListener(e -> loadStudentData());
-
-		// Sự kiện cho nút LƯU
 		btnLuu.addActionListener(e -> saveScores());
-
-		// Sự kiện cho nút XUẤT EXCEL
 		btnXuat.addActionListener(e -> exportToExcel());
 	}
 
-	// Tạo bảng diem nếu chưa tồn tại
 	private void createTableIfNotExists() {
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			stmt = conn.createStatement();
-			String sql = "CREATE TABLE IF NOT EXISTS diem (" + "mssv VARCHAR(50) NOT NULL,"
-					+ "monhoc VARCHAR(100) NOT NULL," + "lop VARCHAR(50) NOT NULL," + "diem FLOAT,"
-					+ "thoigian_chamdiem TIMESTAMP," + "PRIMARY KEY (mssv, monhoc, lop),"
-					+ "FOREIGN KEY (mssv) REFERENCES students(mssv)" + ")";
-			stmt.executeUpdate(sql);
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				Statement stmt = conn.createStatement()) {
+			String sqlStudents = "CREATE TABLE IF NOT EXISTS students (" + "mssv VARCHAR(50) PRIMARY KEY,"
+					+ "hoten VARCHAR(100)," + "ngaysinh DATE," + "gioitinh VARCHAR(10)," + "lop VARCHAR(50),"
+					+ "email VARCHAR(100)" + ")";
+			stmt.executeUpdate(sqlStudents);
+
+			String sqlBaitap = "CREATE TABLE IF NOT EXISTS Baitap (" + "id SERIAL PRIMARY KEY,"
+					+ "mssv VARCHAR(50) REFERENCES students(mssv)," + "monhoc VARCHAR(100)," + "tieude VARCHAR(100),"
+					+ "trangthai VARCHAR(20)," + "thoigian_nop TIMESTAMP," + "ten_tep VARCHAR(255)" + ")";
+			stmt.executeUpdate(sqlBaitap);
+
+			String sqlChamdiem = "CREATE TABLE IF NOT EXISTS Chamdiem (" + "mssv VARCHAR(50)," + "hoten VARCHAR(100),"
+					+ "lop VARCHAR(50)," + "thoigian_nop TIMESTAMP," + "ten_tep VARCHAR(255)," + "diem_chuyencan FLOAT,"
+					+ "diem_15 FLOAT," + "diem_giuaky FLOAT," + "diem_cuoiky FLOAT," + "monhoc VARCHAR(100),"
+					+ "PRIMARY KEY (mssv, monhoc)," + "FOREIGN KEY (mssv) REFERENCES students(mssv)" + ")";
+			stmt.executeUpdate(sqlChamdiem);
 		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(this, "Lỗi khi tạo bảng diem: " + ex.getMessage(), "Lỗi",
+			JOptionPane.showMessageDialog(this, "Lỗi khi tạo bảng: " + ex.getMessage(), "Lỗi",
 					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
 		}
 	}
 
-	// Tải danh sách lớp vào ComboBox
-	private void loadLopComboBox() {
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		List<String> lopList = new ArrayList<>();
-		lopList.add(""); // Thêm tùy chọn rỗng
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			stmt = conn.createStatement();
-			String sql = "SELECT DISTINCT lop FROM students ORDER BY lop";
-			rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				lopList.add(rs.getString("lop"));
-			}
-		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(this, "Lỗi khi tải danh sách lớp: " + ex.getMessage(), "Lỗi",
-					JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
-		}
-		lopComboBox.setModel(new DefaultComboBoxModel<>(lopList.toArray(new String[0])));
-	}
-
-	// Tải danh sách sinh viên theo môn học và lớp
 	private void loadStudentData() {
-		String monHoc = (String) monHocComboBox.getSelectedItem();
-		String lop = (String) lopComboBox.getSelectedItem();
 		tableModel.setRowCount(0);
+		String monHoc = Mon_text.getText();
 
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			StringBuilder sql = new StringBuilder("SELECT s.mssv, s.hoten, s.lop, c.monhoc, d.diem "
-					+ "FROM students s " + "LEFT JOIN courses c ON s.mssv = c.mssv "
-					+ "LEFT JOIN diem d ON s.mssv = d.mssv AND c.monhoc = d.monhoc AND s.lop = d.lop " + "WHERE 1=1");
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(
+						"SELECT s.mssv, s.hoten, s.lop, b.thoigian_nop, b.ten_tep, c.diem_chuyencan, c.diem_15, c.diem_giuaky, c.diem_cuoiky "
+								+ "FROM students s " + "LEFT JOIN Baitap b ON s.mssv = b.mssv AND b.monhoc = ? "
+								+ "LEFT JOIN Chamdiem c ON s.mssv = c.mssv AND c.monhoc = ?")) {
+			pstmt.setString(1, monHoc);
+			pstmt.setString(2, monHoc);
+			ResultSet rs = pstmt.executeQuery();
 
-			List<String> params = new ArrayList<>();
-			if (monHoc != null && !monHoc.isEmpty()) {
-				sql.append(" AND c.monhoc = ?");
-				params.add(monHoc);
-			}
-			if (lop != null && !lop.isEmpty()) {
-				sql.append(" AND s.lop = ?");
-				params.add(lop);
-			}
-
-			pstmt = conn.prepareStatement(sql.toString());
-			for (int i = 0; i < params.size(); i++) {
-				pstmt.setString(i + 1, params.get(i));
-			}
-
-			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String mssv = rs.getString("mssv");
 				String hoten = rs.getString("hoten");
-				String lopSv = rs.getString("lop");
-				String monHocSv = rs.getString("monhoc");
-				Float diem = rs.getFloat("diem");
-				String diemStr = rs.wasNull() ? "" : String.valueOf(diem);
-				if (monHocSv != null) { // Chỉ thêm nếu sinh viên có đăng ký môn học
-					tableModel.addRow(new Object[] { mssv, hoten, lopSv, monHocSv, diemStr });
-				}
+				String lop = rs.getString("lop");
+				Timestamp thoigianNop = rs.getTimestamp("thoigian_nop");
+				String tenTep = rs.getString("ten_tep");
+				Float diemChuyenCan = rs.getFloat("diem_chuyencan");
+				Float diem15 = rs.getFloat("diem_15");
+				Float diemGiuaKy = rs.getFloat("diem_giuaky");
+				Float diemCuoiKy = rs.getFloat("diem_cuoiky");
+
+				String thoigianNopStr = thoigianNop != null ? thoigianNop.toString() : "";
+				String tenTepStr = tenTep != null ? tenTep : "";
+				String diemChuyenCanStr = rs.wasNull() ? "" : String.valueOf(diemChuyenCan);
+				String diem15Str = rs.wasNull() ? "" : String.valueOf(diem15);
+				String diemGiuaKyStr = rs.wasNull() ? "" : String.valueOf(diemGiuaKy);
+				String diemCuoiKyStr = rs.wasNull() ? "" : String.valueOf(diemCuoiKy);
+
+				tableModel.addRow(new Object[] { mssv, hoten, lop, thoigianNopStr, tenTepStr, diemChuyenCanStr,
+						diem15Str, diemGiuaKyStr, diemCuoiKyStr });
 			}
 
 			if (tableModel.getRowCount() == 0) {
-				JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên nào phù hợp!", "Thông báo",
+				JOptionPane.showMessageDialog(this, "Không tìm thấy dữ liệu phù hợp!", "Thông báo",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		} catch (SQLException ex) {
 			JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu: " + ex.getMessage(), "Lỗi",
 					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
 		}
 	}
 
-	// Lưu điểm vào database
 	private void saveScores() {
-		String monHoc = (String) monHocComboBox.getSelectedItem();
-		String lop = (String) lopComboBox.getSelectedItem();
-		if (monHoc == null || monHoc.isEmpty() || lop == null || lop.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn môn học và lớp trước khi lưu!", "Cảnh báo",
-					JOptionPane.WARNING_MESSAGE);
+		String monHoc = Mon_text.getText();
+		if (monHoc.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập môn học!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
-		Connection conn = null;
-		PreparedStatement pstmtUpsert = null;
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
 			conn.setAutoCommit(false);
+			String sql = "INSERT INTO Chamdiem (mssv, hoten, lop, thoigian_nop, ten_tep, diem_chuyencan, diem_15, diem_giuaky, diem_cuoiky, monhoc) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " + "ON CONFLICT (mssv, monhoc) "
+					+ "DO UPDATE SET hoten = EXCLUDED.hoten, " + "lop = EXCLUDED.lop, "
+					+ "thoigian_nop = EXCLUDED.thoigian_nop, " + "ten_tep = EXCLUDED.ten_tep, "
+					+ "diem_chuyencan = EXCLUDED.diem_chuyencan, " + "diem_15 = EXCLUDED.diem_15, "
+					+ "diem_giuaky = EXCLUDED.diem_giuaky, " + "diem_cuoiky = EXCLUDED.diem_cuoiky";
 
-			String sqlUpsert = "INSERT INTO diem (mssv, monhoc, lop, diem, thoigian_chamdiem) "
-					+ "VALUES (?, ?, ?, ?, ?) " + "ON CONFLICT (mssv, monhoc, lop) "
-					+ "DO UPDATE SET diem = EXCLUDED.diem, thoigian_chamdiem = EXCLUDED.thoigian_chamdiem";
+			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				int validRows = 0;
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					String mssv = (String) tableModel.getValueAt(i, 0);
+					String hoten = (String) tableModel.getValueAt(i, 1);
+					String lop = (String) tableModel.getValueAt(i, 2);
+					String thoigianNopStr = (String) tableModel.getValueAt(i, 3);
+					String tenTep = (String) tableModel.getValueAt(i, 4);
+					String diemChuyenCanStr = (String) tableModel.getValueAt(i, 5);
+					String diem15Str = (String) tableModel.getValueAt(i, 6);
+					String diemGiuaKyStr = (String) tableModel.getValueAt(i, 7);
+					String diemCuoiKyStr = (String) tableModel.getValueAt(i, 8);
 
-			pstmtUpsert = conn.prepareStatement(sqlUpsert);
-			int validScores = 0;
+					Timestamp thoigianNop = thoigianNopStr != null && !thoigianNopStr.isEmpty()
+							? Timestamp.valueOf(thoigianNopStr)
+							: null;
+					Float diemChuyenCan = null;
+					Float diem15 = null;
+					Float diemGiuaKy = null;
+					Float diemCuoiKy = null;
 
-			for (int i = 0; i < tableModel.getRowCount(); i++) {
-				String mssv = (String) tableModel.getValueAt(i, 0);
-				String diemStr = (String) tableModel.getValueAt(i, 4);
-				if (diemStr != null && !diemStr.trim().isEmpty()) {
 					try {
-						float diem = Float.parseFloat(diemStr.trim());
-						if (diem < 0 || diem > 10) {
-							JOptionPane.showMessageDialog(this, "Điểm của sinh viên " + mssv + " phải từ 0 đến 10!",
-									"Lỗi", JOptionPane.ERROR_MESSAGE);
-							return;
+						if (diemChuyenCanStr != null && !diemChuyenCanStr.trim().isEmpty()) {
+							diemChuyenCan = Float.parseFloat(diemChuyenCanStr.trim());
+							if (diemChuyenCan < 0 || diemChuyenCan > 10) {
+								JOptionPane.showMessageDialog(this,
+										"Điểm chuyên cần của sinh viên " + mssv + " phải từ 0 đến 10!", "Lỗi",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 						}
-						pstmtUpsert.setString(1, mssv);
-						pstmtUpsert.setString(2, monHoc);
-						pstmtUpsert.setString(3, lop);
-						pstmtUpsert.setFloat(4, diem);
-						pstmtUpsert.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-						pstmtUpsert.addBatch();
-						validScores++;
+						if (diem15Str != null && !diem15Str.trim().isEmpty()) {
+							diem15 = Float.parseFloat(diem15Str.trim());
+							if (diem15 < 0 || diem15 > 10) {
+								JOptionPane.showMessageDialog(this,
+										"Điểm 15 của sinh viên " + mssv + " phải từ 0 đến 10!", "Lỗi",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+						if (diemGiuaKyStr != null && !diemGiuaKyStr.trim().isEmpty()) {
+							diemGiuaKy = Float.parseFloat(diemGiuaKyStr.trim());
+							if (diemGiuaKy < 0 || diemGiuaKy > 10) {
+								JOptionPane.showMessageDialog(this,
+										"Điểm giữa kỳ của sinh viên " + mssv + " phải từ 0 đến 10!", "Lỗi",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+						if (diemCuoiKyStr != null && !diemCuoiKyStr.trim().isEmpty()) {
+							diemCuoiKy = Float.parseFloat(diemCuoiKyStr.trim());
+							if (diemCuoiKy < 0 || diemCuoiKy > 10) {
+								JOptionPane.showMessageDialog(this,
+										"Điểm cuối kỳ của sinh viên " + mssv + " phải từ 0 đến 10!", "Lỗi",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+
+						pstmt.setString(1, mssv);
+						pstmt.setString(2, hoten);
+						pstmt.setString(3, lop);
+						if (thoigianNop != null)
+							pstmt.setTimestamp(4, thoigianNop);
+						else
+							pstmt.setNull(4, java.sql.Types.TIMESTAMP);
+						pstmt.setString(5, tenTep);
+						if (diemChuyenCan != null)
+							pstmt.setFloat(6, diemChuyenCan);
+						else
+							pstmt.setNull(6, java.sql.Types.FLOAT);
+						if (diem15 != null)
+							pstmt.setFloat(7, diem15);
+						else
+							pstmt.setNull(7, java.sql.Types.FLOAT);
+						if (diemGiuaKy != null)
+							pstmt.setFloat(8, diemGiuaKy);
+						else
+							pstmt.setNull(8, java.sql.Types.FLOAT);
+						if (diemCuoiKy != null)
+							pstmt.setFloat(9, diemCuoiKy);
+						else
+							pstmt.setNull(9, java.sql.Types.FLOAT);
+						pstmt.setString(10, monHoc);
+						pstmt.addBatch();
+						validRows++;
 					} catch (NumberFormatException ex) {
 						JOptionPane.showMessageDialog(this, "Điểm của sinh viên " + mssv + " không hợp lệ!", "Lỗi",
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
-			}
 
-			if (validScores == 0) {
-				JOptionPane.showMessageDialog(this, "Không có điểm nào để lưu!", "Cảnh báo",
-						JOptionPane.WARNING_MESSAGE);
-				return;
-			}
+				if (validRows == 0) {
+					JOptionPane.showMessageDialog(this, "Không có dữ liệu để lưu!", "Cảnh báo",
+							JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 
-			pstmtUpsert.executeBatch();
-			conn.commit();
-			JOptionPane.showMessageDialog(this, "Lưu điểm thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-			loadStudentData(); // Tải lại dữ liệu để cập nhật
+				pstmt.executeBatch();
+				conn.commit();
+				JOptionPane.showMessageDialog(this, "Lưu điểm thành công!", "Thành công",
+						JOptionPane.INFORMATION_MESSAGE);
+				loadStudentData();
+			}
 		} catch (SQLException ex) {
 			JOptionPane.showMessageDialog(this, "Lỗi khi lưu điểm: " + ex.getMessage(), "Lỗi",
 					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
-			try {
-				if (conn != null)
-					conn.rollback();
+			try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+				conn.rollback();
 			} catch (SQLException rollbackEx) {
 				rollbackEx.printStackTrace();
-			}
-		} finally {
-			try {
-				if (pstmtUpsert != null)
-					pstmtUpsert.close();
-				if (conn != null) {
-					conn.setAutoCommit(true);
-					conn.close();
-				}
-			} catch (SQLException ex) {
-				ex.printStackTrace();
 			}
 		}
 	}
 
-	// Xuất dữ liệu ra Excel
 	private void exportToExcel() {
 		if (tableModel.getRowCount() == 0) {
 			JOptionPane.showMessageDialog(this, "Không có dữ liệu để xuất!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
@@ -361,11 +344,11 @@ public class ChamDiem extends JPanel {
 		}
 
 		Workbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("BangDiem");
+		Sheet sheet = workbook.createSheet("DanhSachNopBai");
 
-		// Tạo tiêu đề
 		Row headerRow = sheet.createRow(0);
-		String[] columns = { "MSSV", "Họ Tên", "Lớp", "Môn Học", "Điểm" };
+		String[] columns = { "MSSV", "Họ Tên", "Lớp", "Thời gian nộp", "Tên Tệp", "Điểm chuyên cần", "Điểm 15",
+				"Điểm giữa kỳ", "Điểm cuối kỳ" };
 		for (int i = 0; i < columns.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(columns[i]);
@@ -378,7 +361,6 @@ public class ChamDiem extends JPanel {
 			cell.setCellStyle(headerStyle);
 		}
 
-		// Điền dữ liệu
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
 			Row row = sheet.createRow(i + 1);
 			for (int j = 0; j < tableModel.getColumnCount(); j++) {
@@ -390,15 +372,13 @@ public class ChamDiem extends JPanel {
 			}
 		}
 
-		// Tự động điều chỉnh kích thước cột
 		for (int i = 0; i < columns.length; i++) {
 			sheet.autoSizeColumn(i);
 		}
 
-		// Lưu file
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
-		fileChooser.setSelectedFile(new java.io.File("BangDiem.xlsx"));
+		fileChooser.setSelectedFile(new java.io.File("DanhSachNopBai.xlsx"));
 		int userSelection = fileChooser.showSaveDialog(this);
 
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -423,10 +403,7 @@ public class ChamDiem extends JPanel {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
-				JFrame frame = new JFrame();
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setBounds(100, 100, 911, 690);
-				frame.add(new ChamDiem());
+				ChamDiem frame = new ChamDiem();
 				frame.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
