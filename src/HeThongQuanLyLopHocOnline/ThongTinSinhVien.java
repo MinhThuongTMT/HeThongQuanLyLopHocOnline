@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
@@ -21,9 +23,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -42,14 +47,17 @@ public class ThongTinSinhVien extends JFrame {
 	private JComboBox<String> MonHoc_comboBox1;
 	private JComboBox<String> Lop_comboBox_1;
 	private JLabel avata;
+
 	// Các thuộc tính để lưu dữ liệu
 	private String hoTen, mssv, lop, ngaySinh, gioiTinh, email, monHoc, maMon, soTin, thoiGian;
-	// Lưu MSSV ban đầu để xóa thông tin cũ
 	private final String originalMssv;
+	private final List<String[]> pendingCourses = new ArrayList<>(); // Lưu tạm danh sách môn học trước khi nhấn Lưu
+
 	// Thông tin kết nối database
 	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
 	private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
 	private static final String DB_PASSWORD = "MinhThuong0808";
+
 	// Regex để kiểm tra email
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
@@ -62,7 +70,7 @@ public class ThongTinSinhVien extends JFrame {
 			String monHoc, String maMon, String soTin, String thoiGian) {
 		this.hoTen = hoTen;
 		this.mssv = mssv;
-		this.originalMssv = mssv; // Lưu MSSV ban đầu
+		this.originalMssv = mssv;
 		this.lop = lop;
 		this.ngaySinh = ngaySinh;
 		this.gioiTinh = gioiTinh;
@@ -108,17 +116,12 @@ public class ThongTinSinhVien extends JFrame {
 		ThongTinSinhVien.add(avata);
 
 		// Các trường thông tin
-		HoTen_text1 = new JTextField();
-		HoTen_text1.setBounds(539, 95, 310, 30);
-		HoTen_text1.setEditable(false);
-		HoTen_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(HoTen_text1);
-
-		MSSV_text1 = new JTextField();
-		MSSV_text1.setBounds(539, 146, 310, 30);
-		MSSV_text1.setEditable(false);
-		MSSV_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(MSSV_text1);
+		HoTen_text1 = createTextField(539, 95, 310, 30);
+		MSSV_text1 = createTextField(539, 146, 310, 30);
+		Email_text1 = createTextField(539, 299, 310, 30);
+		SoTin_text1 = createTextField(539, 401, 310, 30);
+		MaMon_text1 = createTextField(539, 452, 310, 30);
+		ThoiGian_text1 = createTextField(539, 503, 310, 30);
 
 		Lop_comboBox_1 = new JComboBox<>(new String[] { "", "D21CQVTHI-01", "D21CQVTVT-01", "D21CQVT-01N" });
 		Lop_comboBox_1.setBounds(539, 197, 310, 30);
@@ -139,262 +142,273 @@ public class ThongTinSinhVien extends JFrame {
 		GioiTinh_ComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		ThongTinSinhVien.add(GioiTinh_ComboBox);
 
-		Email_text1 = new JTextField();
-		Email_text1.setBounds(539, 299, 310, 30);
-		Email_text1.setEditable(false);
-		Email_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(Email_text1);
-
 		MonHoc_comboBox1 = new JComboBox<>(new String[] { "", "Cảm Biến", "Java", "Android" });
 		MonHoc_comboBox1.setBounds(539, 350, 310, 30);
 		MonHoc_comboBox1.setEnabled(false);
 		MonHoc_comboBox1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		ThongTinSinhVien.add(MonHoc_comboBox1);
 
-		SoTin_text1 = new JTextField();
-		SoTin_text1.setBounds(539, 401, 310, 30);
-		SoTin_text1.setEditable(false);
-		SoTin_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(SoTin_text1);
-
-		MaMon_text1 = new JTextField();
-		MaMon_text1.setBounds(539, 452, 310, 30);
-		MaMon_text1.setEditable(false);
-		MaMon_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(MaMon_text1);
-
-		ThoiGian_text1 = new JTextField();
-		ThoiGian_text1.setBounds(539, 503, 310, 30);
-		ThoiGian_text1.setEditable(false);
-		ThoiGian_text1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		ThongTinSinhVien.add(ThoiGian_text1);
-
 		// Các nhãn
-		JLabel HoTen_Label = new JLabel("HỌ TÊN :");
-		HoTen_Label.setForeground(Color.WHITE);
-		HoTen_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		HoTen_Label.setBounds(448, 95, 81, 29);
-		ThongTinSinhVien.add(HoTen_Label);
-
-		JLabel MSSV_Label = new JLabel("MSSV :");
-		MSSV_Label.setForeground(Color.WHITE);
-		MSSV_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		MSSV_Label.setBounds(448, 146, 81, 29);
-		ThongTinSinhVien.add(MSSV_Label);
-
-		JLabel Lop_Label = new JLabel("LỚP :");
-		Lop_Label.setForeground(Color.WHITE);
-		Lop_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		Lop_Label.setBounds(448, 197, 81, 29);
-		ThongTinSinhVien.add(Lop_Label);
-
-		JLabel NgaySinh_label = new JLabel("NGÀY SINH:");
-		NgaySinh_label.setForeground(Color.WHITE);
-		NgaySinh_label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		NgaySinh_label.setBounds(448, 248, 103, 29);
-		ThongTinSinhVien.add(NgaySinh_label);
-
-		JLabel GioiTinh_label = new JLabel("GIỚI TÍNH:");
-		GioiTinh_label.setForeground(Color.WHITE);
-		GioiTinh_label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		GioiTinh_label.setBounds(700, 248, 93, 29);
-		ThongTinSinhVien.add(GioiTinh_label);
-
-		JLabel Email_Label = new JLabel("EMAIL :");
-		Email_Label.setForeground(Color.WHITE);
-		Email_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		Email_Label.setBounds(448, 299, 81, 29);
-		ThongTinSinhVien.add(Email_Label);
-
-		JLabel MonHoc_Label = new JLabel("MÔN HỌC :");
-		MonHoc_Label.setForeground(Color.WHITE);
-		MonHoc_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		MonHoc_Label.setBounds(448, 350, 93, 29);
-		ThongTinSinhVien.add(MonHoc_Label);
-
-		JLabel SoTin_Label = new JLabel("SỐ TÍN:");
-		SoTin_Label.setForeground(Color.WHITE);
-		SoTin_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		SoTin_Label.setBounds(448, 401, 81, 29);
-		ThongTinSinhVien.add(SoTin_Label);
-
-		JLabel MaMon_Label = new JLabel("MÃ MÔN :");
-		MaMon_Label.setForeground(Color.WHITE);
-		MaMon_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		MaMon_Label.setBounds(448, 452, 81, 29);
-		ThongTinSinhVien.add(MaMon_Label);
-
-		JLabel ThoiGian_Label = new JLabel("THỜI GIAN:");
-		ThoiGian_Label.setForeground(Color.WHITE);
-		ThoiGian_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		ThoiGian_Label.setBounds(448, 503, 93, 29);
-		ThongTinSinhVien.add(ThoiGian_Label);
+		addLabel("HỌ TÊN :", 448, 95, 81, 29);
+		addLabel("MSSV :", 448, 146, 81, 29);
+		addLabel("LỚP :", 448, 197, 81, 29);
+		addLabel("NGÀY SINH:", 448, 248, 103, 29);
+		addLabel("GIỚI TÍNH:", 700, 248, 93, 29);
+		addLabel("EMAIL :", 448, 299, 81, 29);
+		addLabel("MÔN HỌC :", 448, 350, 93, 29);
+		addLabel("SỐ TÍN:", 448, 401, 81, 29);
+		addLabel("MÃ MÔN :", 448, 452, 81, 29);
+		addLabel("THỜI GIAN:", 448, 503, 93, 29);
 
 		// Các nút
-		JButton Sua_button = new JButton("SỬA");
-		Sua_button.setBounds(61, 360, 120, 44);
-		Sua_button.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		Sua_button.setBackground(new Color(50, 150, 255));
-		Sua_button.setForeground(Color.BLACK);
-		Sua_button.setBorder(new LineBorder(Color.WHITE, 1));
-		ThongTinSinhVien.add(Sua_button);
+		JButton Sua_button = createButton("SỬA", 61, 360, 120, 44, new Color(50, 150, 255));
+		Sua_button.addActionListener(e -> enableEditing(true));
 
-		Sua_button.addActionListener(e -> {
-			// Lấy dữ liệu từ database
-			loadDataFromDatabase();
-			// Cho phép chỉnh sửa các trường
-			HoTen_text1.setEditable(true);
-			MSSV_text1.setEditable(true);
-			NgaySinh_text.setEnabled(true);
-			GioiTinh_ComboBox.setEnabled(true);
-			Email_text1.setEditable(true);
-			SoTin_text1.setEditable(true);
-			MaMon_text1.setEditable(true);
-			ThoiGian_text1.setEditable(true);
-			Lop_comboBox_1.setEnabled(true);
-			MonHoc_comboBox1.setEnabled(true);
-		});
+		JButton Luu_button = createButton("LƯU", 252, 360, 120, 44, new Color(50, 150, 255));
+		Luu_button.addActionListener(e -> saveStudentInfo());
 
-		JButton Luu_button = new JButton("LƯU");
-		Luu_button.setBounds(252, 360, 120, 44);
-		Luu_button.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		Luu_button.setBackground(new Color(50, 150, 255));
-		Luu_button.setForeground(Color.BLACK);
-		Luu_button.setBorder(new LineBorder(Color.WHITE, 1));
-		ThongTinSinhVien.add(Luu_button);
+		JButton ThemMon_button = createButton("THÊM MÔN", 61, 415, 120, 44, new Color(50, 200, 50));
+		ThemMon_button.addActionListener(e -> addNewCourse());
 
-		Luu_button.addActionListener(e -> {
-			// Kiểm tra dữ liệu đầu vào
-			if (HoTen_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Họ tên không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (MSSV_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "MSSV không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (Lop_comboBox_1.getSelectedIndex() == 0) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn lớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (NgaySinh_text.getDate() == null) {
-				JOptionPane.showMessageDialog(this, "Ngày sinh không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (GioiTinh_ComboBox.getSelectedIndex() == 0) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn giới tính!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (Email_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Email không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (!EMAIL_PATTERN.matcher(Email_text1.getText().trim()).matches()) {
-				JOptionPane.showMessageDialog(this, "Email không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (MonHoc_comboBox1.getSelectedIndex() == 0) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn môn học!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (MaMon_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Mã môn không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (SoTin_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Số tín không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				Integer.parseInt(SoTin_text1.getText().trim());
-			} catch (NumberFormatException ex) {
-				JOptionPane.showMessageDialog(this, "Số tín phải là số nguyên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if (ThoiGian_text1.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Thời gian không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+		JButton HienThiMon_button = createButton("HIỂN THỊ MÔN", 252, 415, 120, 44, new Color(255, 165, 0));
+		HienThiMon_button.addActionListener(e -> displayCourses());
 
-			// Cập nhật lại các thuộc tính
-
-			hoTen = HoTen_text1.getText();
-			mssv = MSSV_text1.getText();
-			lop = (String) Lop_comboBox_1.getSelectedItem();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			ngaySinh = sdf.format(NgaySinh_text.getDate());
-			gioiTinh = (String) GioiTinh_ComboBox.getSelectedItem();
-			email = Email_text1.getText();
-			monHoc = (String) MonHoc_comboBox1.getSelectedItem();
-			maMon = MaMon_text1.getText();
-			soTin = SoTin_text1.getText();
-			thoiGian = ThoiGian_text1.getText();
-
-			// Lưu vào database
-			saveToDatabase();
-
-			// Vô hiệu hóa các trường sau khi lưu
-			HoTen_text1.setEditable(false);
-			MSSV_text1.setEditable(false);
-			NgaySinh_text.setEnabled(false);
-			GioiTinh_ComboBox.setEnabled(false);
-			Email_text1.setEditable(false);
-			SoTin_text1.setEditable(false);
-			MaMon_text1.setEditable(false);
-			ThoiGian_text1.setEditable(false);
-			Lop_comboBox_1.setEnabled(false);
-			MonHoc_comboBox1.setEnabled(false);
-
-			updateAvatar((String) GioiTinh_ComboBox.getSelectedItem());
-		});
-
-		JButton NopBaiTap_button = new JButton("NỘP BÀI TẬP");
-		NopBaiTap_button.setBounds(139, 471, 162, 44);
-		NopBaiTap_button.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		NopBaiTap_button.setBackground(new Color(255, 165, 80));
-		NopBaiTap_button.setForeground(Color.BLACK);
-		NopBaiTap_button.setBorder(new LineBorder(Color.WHITE, 1));
-		ThongTinSinhVien.add(NopBaiTap_button);
-
-		// Lấy MSSV và Tên chuyển đến BaiTap.java
+		JButton NopBaiTap_button = createButton("NỘP BÀI TẬP", 139, 471, 162, 44, new Color(255, 165, 80));
 		NopBaiTap_button.addActionListener(e -> {
-			String hoTen = getHoTen(); // Lấy tên
-			String mssv = getMssv(); // Lấy MSSV
-
-			BaiTap baiTapFrame = new BaiTap(hoTen, mssv); // Tạo instance BaiTap với tên và MSSV
-			baiTapFrame.setVisible(true); // Hiển thị cửa sổ BaiTap
-
+			BaiTap baiTapFrame = new BaiTap(getHoTen(), getMssv());
+			baiTapFrame.setVisible(true);
 		});
 
-		// Xử lý khi chọn môn học
-		MonHoc_comboBox1.addItemListener(e -> {
-			String selectedSubject = (String) MonHoc_comboBox1.getSelectedItem();
-			if ("Cảm Biến".equals(selectedSubject)) {
-				MaMon_text1.setText("iot");
-				SoTin_text1.setText("3");
-				ThoiGian_text1.setText("4/5-6-8");
-			} else if ("Java".equals(selectedSubject)) {
-				MaMon_text1.setText("jv");
-				SoTin_text1.setText("2");
-				ThoiGian_text1.setText("6/7-7/8");
-			} else if ("Android".equals(selectedSubject)) {
-				MaMon_text1.setText("ad");
-				SoTin_text1.setText("3");
-				ThoiGian_text1.setText("7/7-7/9");
-			} else {
-				MaMon_text1.setText("");
-				SoTin_text1.setText("");
-				ThoiGian_text1.setText("");
+		MonHoc_comboBox1.addItemListener(e -> updateCourseDetails());
+	}
+
+	private JTextField createTextField(int x, int y, int width, int height) {
+		JTextField textField = new JTextField();
+		textField.setBounds(x, y, width, height);
+		textField.setEditable(false);
+		textField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		ThongTinSinhVien.add(textField);
+		return textField;
+	}
+
+	private void addLabel(String text, int x, int y, int width, int height) {
+		JLabel label = new JLabel(text);
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		label.setBounds(x, y, width, height);
+		ThongTinSinhVien.add(label);
+	}
+
+	private JButton createButton(String text, int x, int y, int width, int height, Color bgColor) {
+		JButton button = new JButton(text);
+		button.setBounds(x, y, width, height);
+		button.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		button.setBackground(bgColor);
+		button.setForeground(Color.BLACK);
+		button.setBorder(new LineBorder(Color.WHITE, 1));
+		ThongTinSinhVien.add(button);
+		return button;
+	}
+
+	private void enableEditing(boolean enable) {
+		loadDataFromDatabase();
+		HoTen_text1.setEditable(enable);
+		MSSV_text1.setEditable(enable);
+		NgaySinh_text.setEnabled(enable);
+		GioiTinh_ComboBox.setEnabled(enable);
+		Email_text1.setEditable(enable);
+		SoTin_text1.setEditable(enable);
+		MaMon_text1.setEditable(enable);
+		ThoiGian_text1.setEditable(enable);
+		Lop_comboBox_1.setEnabled(enable);
+		MonHoc_comboBox1.setEnabled(enable);
+	}
+
+	private void saveStudentInfo() {
+		if (!validateStudentInfo())
+			return;
+
+		hoTen = HoTen_text1.getText().trim();
+		mssv = MSSV_text1.getText().trim();
+		lop = (String) Lop_comboBox_1.getSelectedItem();
+		ngaySinh = new SimpleDateFormat("dd/MM/yyyy").format(NgaySinh_text.getDate());
+		gioiTinh = (String) GioiTinh_ComboBox.getSelectedItem();
+		email = Email_text1.getText().trim();
+
+		saveToDatabase();
+		enableEditing(false);
+		updateAvatar(gioiTinh);
+	}
+
+	private boolean validateStudentInfo() {
+		if (HoTen_text1.getText().trim().isEmpty()) {
+			showError("Họ tên không được để trống!");
+			return false;
+		}
+		if (MSSV_text1.getText().trim().isEmpty()) {
+			showError("MSSV không được để trống!");
+			return false;
+		}
+		if (Lop_comboBox_1.getSelectedIndex() == 0) {
+			showError("Vui lòng chọn lớp!");
+			return false;
+		}
+		if (NgaySinh_text.getDate() == null) {
+			showError("Ngày sinh không được để trống!");
+			return false;
+		}
+		if (GioiTinh_ComboBox.getSelectedIndex() == 0) {
+			showError("Vui lòng chọn giới tính!");
+			return false;
+		}
+		if (Email_text1.getText().trim().isEmpty()) {
+			showError("Email không được để trống!");
+			return false;
+		}
+		if (!EMAIL_PATTERN.matcher(Email_text1.getText().trim()).matches()) {
+			showError("Email không hợp lệ!");
+			return false;
+		}
+		return true;
+	}
+
+	private boolean isCourseExists(String maMon) {
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			String sql = "SELECT COUNT(*) FROM courses WHERE mssv = ? AND mamon = ?";
+			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				pstmt.setString(1, MSSV_text1.getText().trim());
+				pstmt.setString(2, maMon);
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt(1) > 0;
+					}
+				}
 			}
-		});
+		} catch (SQLException ex) {
+			showError("Lỗi khi kiểm tra môn học: " + ex.getMessage());
+		}
+		return false;
+	}
+
+	private void addNewCourse() {
+		MonHoc_comboBox1.setEnabled(true);
+		MaMon_text1.setEditable(true);
+		SoTin_text1.setEditable(true);
+		ThoiGian_text1.setEditable(true);
+
+		MonHoc_comboBox1.setSelectedIndex(0);
+		MaMon_text1.setText("");
+		SoTin_text1.setText("");
+		ThoiGian_text1.setText("");
+
+		JPanel dialogPanel = new JPanel(new java.awt.GridLayout(4, 2));
+		dialogPanel.add(new JLabel("Môn Học:"));
+		dialogPanel.add(MonHoc_comboBox1);
+		dialogPanel.add(new JLabel("Mã Môn:"));
+		dialogPanel.add(MaMon_text1);
+		dialogPanel.add(new JLabel("Số Tín:"));
+		dialogPanel.add(SoTin_text1);
+		dialogPanel.add(new JLabel("Thời Gian:"));
+		dialogPanel.add(ThoiGian_text1);
+
+		if (JOptionPane.showConfirmDialog(this, dialogPanel, "Thêm Môn Học",
+				JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+			if (!validateCourseInfo())
+				return;
+
+			String maMon = MaMon_text1.getText().trim();
+			if (isCourseExists(maMon)) {
+				showError("Môn học với mã " + maMon + " đã được đăng ký!");
+				return;
+			}
+
+			// Lưu trực tiếp vào database
+			saveCourseToDatabase(MSSV_text1.getText().trim(), (String) MonHoc_comboBox1.getSelectedItem(), maMon,
+					Integer.parseInt(SoTin_text1.getText().trim()), ThoiGian_text1.getText().trim());
+
+			enableEditing(false);
+		}
+	}
+
+	private void saveCourseToDatabase(String mssv, String monHoc, String maMon, int soTin, String thoiGian) {
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			String sqlInsertCourse = "INSERT INTO courses (mssv, monhoc, mamon, sotin, thoigian) VALUES (?, ?, ?, ?, ?)";
+			try (PreparedStatement pstmtInsertCourse = conn.prepareStatement(sqlInsertCourse)) {
+				pstmtInsertCourse.setString(1, mssv);
+				pstmtInsertCourse.setString(2, monHoc);
+				pstmtInsertCourse.setString(3, maMon);
+				pstmtInsertCourse.setInt(4, soTin);
+				pstmtInsertCourse.setString(5, thoiGian);
+				pstmtInsertCourse.executeUpdate();
+
+				JOptionPane.showMessageDialog(this, "Thêm môn học thành công!", "Thành công",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (SQLException ex) {
+			showError("Lỗi khi lưu môn học: " + ex.getMessage());
+		}
+	}
+
+	private boolean validateCourseInfo() {
+		if (MonHoc_comboBox1.getSelectedIndex() == 0) {
+			showError("Vui lòng chọn môn học!");
+			return false;
+		}
+		if (MaMon_text1.getText().trim().isEmpty()) {
+			showError("Mã môn không được để trống!");
+			return false;
+		}
+		if (SoTin_text1.getText().trim().isEmpty()) {
+			showError("Số tín không được để trống!");
+			return false;
+		}
+		try {
+			Integer.parseInt(SoTin_text1.getText().trim());
+		} catch (NumberFormatException ex) {
+			showError("Số tín phải là số nguyên!");
+			return false;
+		}
+		if (ThoiGian_text1.getText().trim().isEmpty()) {
+			showError("Thời gian không được để trống!");
+			return false;
+		}
+		return true;
+	}
+
+	private void displayCourses() {
+		List<String[]> courses = getCoursesFromDatabase();
+		if (courses.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Chưa có môn học nào được đăng ký!", "Thông tin",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		String[] columnNames = { "Mã môn", "Môn học", "Số tín", "Thời gian" };
+		DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+		JTable table = new JTable(tableModel);
+		table.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		table.setRowHeight(25);
+		table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14));
+		table.getTableHeader().setBackground(new Color(255, 204, 0));
+		table.getTableHeader().setForeground(Color.BLACK);
+
+		// Thêm các môn từ database
+		for (String[] course : courses) {
+			tableModel.addRow(new String[] { course[1], course[0], course[2], course[3] });
+		}
+
+		JScrollPane scrollPane = new JScrollPane(table);
+		JPanel panel = new JPanel(new java.awt.BorderLayout());
+		panel.add(new JLabel("Số lượng môn đã đăng ký: " + courses.size()), java.awt.BorderLayout.NORTH);
+		panel.add(scrollPane, java.awt.BorderLayout.CENTER);
+
+		JOptionPane.showMessageDialog(this, panel, "Danh Sách Môn Học", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private void updateAvatar(String gioiTinh) {
-		String avatarPath = "/Icon/avata_nam.png"; // Default avatar
+		String avatarPath = "/Icon/avata_nam.png";
 		if ("Nữ".equalsIgnoreCase(gioiTinh)) {
 			avatarPath = "/Icon/avata_nu.png";
-		} else if ("Nam".equalsIgnoreCase(gioiTinh)) {
-			avatarPath = "/Icon/avata_nam.png";
 		}
 
 		try {
@@ -407,17 +421,41 @@ public class ThongTinSinhVien extends JFrame {
 		}
 	}
 
+	private void updateCourseDetails() {
+		String selectedSubject = (String) MonHoc_comboBox1.getSelectedItem();
+		switch (selectedSubject != null ? selectedSubject : "") {
+		case "Cảm Biến":
+			MaMon_text1.setText("iot");
+			SoTin_text1.setText("3");
+			ThoiGian_text1.setText("4/5-6-8");
+			break;
+		case "Java":
+			MaMon_text1.setText("jv");
+			SoTin_text1.setText("2");
+			ThoiGian_text1.setText("6/7-7/8");
+			break;
+		case "Android":
+			MaMon_text1.setText("ad");
+			SoTin_text1.setText("3");
+			ThoiGian_text1.setText("7/7-7/9");
+			break;
+		default:
+			MaMon_text1.setText("");
+			SoTin_text1.setText("");
+			ThoiGian_text1.setText("");
+		}
+	}
+
 	private void loadDataToFields() {
 		HoTen_text1.setText(hoTen);
 		MSSV_text1.setText(mssv);
 		Lop_comboBox_1.setSelectedItem(lop);
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			if (ngaySinh != null && !ngaySinh.isEmpty()) {
-				NgaySinh_text.setDate(sdf.parse(ngaySinh));
+				NgaySinh_text.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(ngaySinh));
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			showError("Lỗi định dạng ngày sinh!");
 		}
 		GioiTinh_ComboBox.setSelectedItem(gioiTinh);
 		Email_text1.setText(email);
@@ -429,163 +467,121 @@ public class ThongTinSinhVien extends JFrame {
 	}
 
 	private void loadDataFromDatabase() {
-		Connection conn = null;
-		PreparedStatement pstmtStudent = null;
-		PreparedStatement pstmtCourse = null;
-		ResultSet rsStudent = null;
-		ResultSet rsCourse = null;
-
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-
-			// Lấy thông tin sinh viên
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			// Load student info
 			String sqlStudent = "SELECT * FROM students WHERE mssv = ?";
-			pstmtStudent = conn.prepareStatement(sqlStudent);
-			pstmtStudent.setString(1, originalMssv);
-			rsStudent = pstmtStudent.executeQuery();
+			try (PreparedStatement pstmtStudent = conn.prepareStatement(sqlStudent)) {
+				pstmtStudent.setString(1, originalMssv);
+				try (ResultSet rsStudent = pstmtStudent.executeQuery()) {
+					if (rsStudent.next()) {
+						hoTen = rsStudent.getString("hoten");
+						lop = rsStudent.getString("lop");
+						gioiTinh = rsStudent.getString("gioitinh");
+						email = rsStudent.getString("email");
+						Date date = rsStudent.getDate("ngaysinh");
+						ngaySinh = date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : "";
 
-			// Lấy thông tin khóa học
-			String sqlCourse = "SELECT * FROM courses WHERE mssv = ?";
-			pstmtCourse = conn.prepareStatement(sqlCourse);
-			pstmtCourse.setString(1, originalMssv);
-			rsCourse = pstmtCourse.executeQuery();
-
-			if (rsStudent.next()) {
-				hoTen = rsStudent.getString("hoten");
-				lop = rsStudent.getString("lop");
-				gioiTinh = rsStudent.getString("gioitinh");
-				email = rsStudent.getString("email");
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				ngaySinh = rsStudent.getDate("ngaysinh") != null ? sdf.format(rsStudent.getDate("ngaysinh")) : "";
-
-				// Cập nhật các trường
-				HoTen_text1.setText(hoTen);
-				MSSV_text1.setText(originalMssv);
-				Lop_comboBox_1.setSelectedItem(lop);
-				GioiTinh_ComboBox.setSelectedItem(gioiTinh);
-				Email_text1.setText(email);
-				if (!ngaySinh.isEmpty()) {
-					NgaySinh_text.setDate(sdf.parse(ngaySinh));
+						HoTen_text1.setText(hoTen);
+						MSSV_text1.setText(originalMssv);
+						Lop_comboBox_1.setSelectedItem(lop);
+						GioiTinh_ComboBox.setSelectedItem(gioiTinh);
+						Email_text1.setText(email);
+						if (!ngaySinh.isEmpty()) {
+							NgaySinh_text.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(ngaySinh));
+						}
+					} else {
+						showError("Không tìm thấy thông tin sinh viên với MSSV: " + originalMssv);
+					}
 				}
-			} else {
-				JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin sinh viên với MSSV: " + originalMssv,
-						"Lỗi", JOptionPane.ERROR_MESSAGE);
 			}
 
-			if (rsCourse.next()) {
-				monHoc = rsCourse.getString("monhoc");
-				maMon = rsCourse.getString("mamon");
-				soTin = String.valueOf(rsCourse.getInt("sotin"));
-				thoiGian = rsCourse.getString("thoigian");
+			// Load course info
+			String sqlCourse = "SELECT * FROM courses WHERE mssv = ? LIMIT 1";
+			try (PreparedStatement pstmtCourse = conn.prepareStatement(sqlCourse)) {
+				pstmtCourse.setString(1, originalMssv);
+				try (ResultSet rsCourse = pstmtCourse.executeQuery()) {
+					if (rsCourse.next()) {
+						monHoc = rsCourse.getString("monhoc");
+						maMon = rsCourse.getString("mamon");
+						soTin = String.valueOf(rsCourse.getInt("sotin"));
+						thoiGian = rsCourse.getString("thoigian");
 
-				// Cập nhật các trường
-				MonHoc_comboBox1.setSelectedItem(monHoc);
-				MaMon_text1.setText(maMon);
-				SoTin_text1.setText(soTin);
-				ThoiGian_text1.setText(thoiGian);
-			} else {
-				JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin khóa học với MSSV: " + originalMssv,
-						"Lỗi", JOptionPane.ERROR_MESSAGE);
+						MonHoc_comboBox1.setSelectedItem(monHoc);
+						MaMon_text1.setText(maMon);
+						SoTin_text1.setText(soTin);
+						ThoiGian_text1.setText(thoiGian);
+					}
+				}
 			}
-
-		} catch (SQLException ex) {
-			JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu từ cơ sở dữ liệu: " + ex.getMessage(), "Lỗi",
-					JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-		} catch (ParseException ex) {
-			JOptionPane.showMessageDialog(this, "Lỗi định dạng ngày sinh: " + ex.getMessage(), "Lỗi",
-					JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-		} finally {
-			closeResources(rsStudent, rsCourse, pstmtStudent, pstmtCourse, conn);
+		} catch (SQLException | ParseException ex) {
+			showError("Lỗi khi tải dữ liệu: " + ex.getMessage());
 		}
 	}
 
 	private void saveToDatabase() {
-		Connection conn = null;
-		PreparedStatement pstmtDeleteCourse = null;
-		PreparedStatement pstmtDeleteStudent = null;
-		PreparedStatement pstmtInsertStudent = null;
-		PreparedStatement pstmtInsertCourse = null;
-
-		try {
-			conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-			conn.setAutoCommit(false); // Bắt đầu transaction
-
-			// Xóa thông tin cũ của khóa học trước (do ràng buộc khóa ngoại)
-			String sqlDeleteCourse = "DELETE FROM courses WHERE mssv = ?";
-			pstmtDeleteCourse = conn.prepareStatement(sqlDeleteCourse);
-			pstmtDeleteCourse.setString(1, originalMssv);
-			pstmtDeleteCourse.executeUpdate();
-
-			// Xóa thông tin cũ của sinh viên
-			String sqlDeleteStudent = "DELETE FROM students WHERE mssv = ?";
-			pstmtDeleteStudent = conn.prepareStatement(sqlDeleteStudent);
-			pstmtDeleteStudent.setString(1, originalMssv);
-			pstmtDeleteStudent.executeUpdate();
-
-			// Thêm thông tin sinh viên mới
-			String sqlInsertStudent = "INSERT INTO students (mssv, hoten, ngaysinh, gioitinh, lop, email) VALUES (?, ?, ?, ?, ?, ?)";
-			pstmtInsertStudent = conn.prepareStatement(sqlInsertStudent);
-			pstmtInsertStudent.setString(1, MSSV_text1.getText());
-			pstmtInsertStudent.setString(2, HoTen_text1.getText());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = NgaySinh_text.getDate();
-			pstmtInsertStudent.setDate(3, date != null ? new java.sql.Date(date.getTime()) : null);
-			pstmtInsertStudent.setString(4, GioiTinh_ComboBox.getSelectedItem().toString());
-			pstmtInsertStudent.setString(5, Lop_comboBox_1.getSelectedItem().toString());
-			pstmtInsertStudent.setString(6, Email_text1.getText());
-			pstmtInsertStudent.executeUpdate();
-
-			// Thêm thông tin khóa học mới
-			String sqlInsertCourse = "INSERT INTO courses (mssv, monhoc, mamon, sotin, thoigian) VALUES (?, ?, ?, ?, ?)";
-			pstmtInsertCourse = conn.prepareStatement(sqlInsertCourse);
-			pstmtInsertCourse.setString(1, MSSV_text1.getText());
-			pstmtInsertCourse.setString(2, MonHoc_comboBox1.getSelectedItem().toString());
-			pstmtInsertCourse.setString(3, MaMon_text1.getText());
-			pstmtInsertCourse.setInt(4, Integer.parseInt(SoTin_text1.getText()));
-			pstmtInsertCourse.setString(5, ThoiGian_text1.getText());
-			pstmtInsertCourse.executeUpdate();
-
-			conn.commit(); // Commit transaction
-			JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công!", "Thành công",
-					JOptionPane.INFORMATION_MESSAGE);
-
-		} catch (SQLException ex) {
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			conn.setAutoCommit(false);
 			try {
-				if (conn != null) {
-					conn.rollback(); // Rollback nếu có lỗi
+				// Xóa các môn học cũ của sinh viên trước (để tránh vi phạm ràng buộc khóa
+				// ngoại)
+				String sqlDeleteCourses = "DELETE FROM courses WHERE mssv = ?";
+				try (PreparedStatement pstmtDeleteCourses = conn.prepareStatement(sqlDeleteCourses)) {
+					pstmtDeleteCourses.setString(1, originalMssv);
+					pstmtDeleteCourses.executeUpdate();
 				}
-			} catch (SQLException rollbackEx) {
-				rollbackEx.printStackTrace();
+
+				// Sau khi xóa các môn học, mới xóa thông tin sinh viên
+				String sqlDeleteStudent = "DELETE FROM students WHERE mssv = ?";
+				try (PreparedStatement pstmtDeleteStudent = conn.prepareStatement(sqlDeleteStudent)) {
+					pstmtDeleteStudent.setString(1, originalMssv);
+					pstmtDeleteStudent.executeUpdate();
+				}
+
+				// Thêm thông tin sinh viên mới
+				String sqlInsertStudent = "INSERT INTO students (mssv, hoten, ngaysinh, gioitinh, lop, email) VALUES (?, ?, ?, ?, ?, ?)";
+				try (PreparedStatement pstmtInsertStudent = conn.prepareStatement(sqlInsertStudent)) {
+					pstmtInsertStudent.setString(1, mssv);
+					pstmtInsertStudent.setString(2, hoTen);
+					pstmtInsertStudent.setDate(3, new java.sql.Date(NgaySinh_text.getDate().getTime()));
+					pstmtInsertStudent.setString(4, gioiTinh);
+					pstmtInsertStudent.setString(5, lop);
+					pstmtInsertStudent.setString(6, email);
+					pstmtInsertStudent.executeUpdate();
+				}
+
+				conn.commit();
+				JOptionPane.showMessageDialog(this, "Cập nhật thông tin sinh viên thành công!", "Thành công",
+						JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException ex) {
+				conn.rollback();
+				throw ex;
 			}
-			JOptionPane.showMessageDialog(this, "Lỗi khi lưu vào cơ sở dữ liệu: " + ex.getMessage(), "Lỗi",
-					JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
-		} catch (NumberFormatException ex) {
-			JOptionPane.showMessageDialog(this, "Số tín phải là số nguyên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			closeResources(null, null, pstmtDeleteCourse, pstmtDeleteStudent, conn);
-			closeResources(null, null, pstmtInsertStudent, pstmtInsertCourse, null);
+		} catch (SQLException ex) {
+			showError("Lỗi khi lưu dữ liệu: " + ex.getMessage());
 		}
 	}
 
-	private void closeResources(ResultSet rsStudent, ResultSet rsCourse, PreparedStatement pstmt1,
-			PreparedStatement pstmt2, Connection conn) {
-		try {
-			if (rsStudent != null)
-				rsStudent.close();
-			if (rsCourse != null)
-				rsCourse.close();
-			if (pstmt1 != null)
-				pstmt1.close();
-			if (pstmt2 != null)
-				pstmt2.close();
-			if (conn != null)
-				conn.close();
+	private List<String[]> getCoursesFromDatabase() {
+		List<String[]> courses = new ArrayList<>();
+		try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+			String sqlCourse = "SELECT * FROM courses WHERE mssv = ?";
+			try (PreparedStatement pstmtCourse = conn.prepareStatement(sqlCourse)) {
+				pstmtCourse.setString(1, MSSV_text1.getText().trim());
+				try (ResultSet rsCourse = pstmtCourse.executeQuery()) {
+					while (rsCourse.next()) {
+						courses.add(new String[] { rsCourse.getString("monhoc"), rsCourse.getString("mamon"),
+								String.valueOf(rsCourse.getInt("sotin")), rsCourse.getString("thoigian") });
+					}
+				}
+			}
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			showError("Lỗi khi lấy danh sách môn học: " + ex.getMessage());
 		}
+		return courses;
+	}
+
+	private void showError(String message) {
+		JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public String getHoTen() {
