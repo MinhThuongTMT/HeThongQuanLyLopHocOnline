@@ -1,608 +1,509 @@
-package HeThongQuanLyLopHocOnline;
+package QuanLyLopHoc;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
-public class TrangChu extends JFrame {
-
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JPanel TrangChinh;
-	private Component[] initialComponents;
-	private JButton[] menuButtons;
-	private Color defaultColor = new Color(255, 204, 0);
-	private Color selectedColor = new Color(255, 255, 0);
-	private Calendar calendar = Calendar.getInstance();
-	private SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
-	private JTable calendarTable;
-	private JLabel monthYearLabel;
-	private DefaultTableModel tableModel;
-	private Calendar today = Calendar.getInstance();
-
-	public TrangChu() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 700);
-		setLocationRelativeTo(null);
-
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 121));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		JPanel panel = new JPanel();
-		panel.setBackground(defaultColor);
-		panel.setBounds(0, 0, 76, 663);
-		contentPane.add(panel);
-		panel.setLayout(null);
-
-		JButton TrangChu_Button = createButton("/Icon/house.png", 93);
-		JButton Student_Button = createButton("/Icon/student.png", 159);
-		JButton Teach_Button = createButton("/Icon/teach.png", 246);
-		JButton Manage_Button = createButton("/Icon/manager.png", 319);
-		JButton BaiTap_Button = createButton("/Icon/BaiTap.png", 394);
-		JButton Exit_Button = createButton("/Icon/EXIT.png", 586);
-
-		menuButtons = new JButton[] { TrangChu_Button, Student_Button, Teach_Button, Manage_Button, BaiTap_Button,
-				Exit_Button };
-
-		for (JButton login_bnt : menuButtons) {
-			panel.add(login_bnt);
-		}
-
-		// Tạo JPopupMenu cho nút Quản Lý
-		JPopupMenu manageMenu = new JPopupMenu();
-		JMenuItem manageStudentItem = new JMenuItem("Quản Lý Sinh Viên");
-		JMenuItem manageTeacherItem = new JMenuItem("Quản Lý Giảng Viên");
-		JMenuItem manageClassItem = new JMenuItem("Quản Lý Lớp Học");
-
-		manageMenu.add(manageStudentItem);
-		manageMenu.add(manageTeacherItem);
-		manageMenu.add(manageClassItem);
-
-		// Thêm MouseListener để hiển thị menu ngữ cảnh khi nhấn nút Quản Lý
-		Manage_Button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				manageMenu.show(Manage_Button, 0, Manage_Button.getHeight());
-			}
-		});
-
-		// ActionListener cho các mục trong menu ngữ cảnh
-		manageStudentItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Manage_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				QuanLySinhVien QLstudentPanel = new QuanLySinhVien();
-				QLstudentPanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(QLstudentPanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		manageTeacherItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Manage_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				QuanLyGiangVien QLteachPanel = new QuanLyGiangVien();
-				QLteachPanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(QLteachPanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		manageClassItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Manage_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				QuanLyLopHoc QLlopPanel = new QuanLyLopHoc();
-				QLlopPanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(QLlopPanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		TrangChu_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				TrangChu_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				for (Component comp : initialComponents) {
-					TrangChinh.add(comp);
-				}
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		Student_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Student_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				SinhVien studentPanel = new SinhVien();
-				studentPanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(studentPanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		Teach_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Teach_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				GiangVien managePanel = new GiangVien();
-				managePanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(managePanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		BaiTap_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				BaiTap_Button.setBackground(selectedColor);
-				TrangChinh.removeAll();
-				QuanLyBaiTap baiTapPanel = new QuanLyBaiTap();
-				baiTapPanel.setBounds(0, 0, 895, 652);
-				TrangChinh.add(baiTapPanel);
-				TrangChinh.revalidate();
-				TrangChinh.repaint();
-			}
-		});
-
-		Exit_Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				resetButtonColors();
-				Exit_Button.setBackground(selectedColor);
-				int confirm = JOptionPane.showConfirmDialog(TrangChu.this, "Bạn có chắc chắn muốn thoát không?",
-						"Xác nhận thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (confirm == JOptionPane.YES_OPTION) {
-					System.exit(0);
-				}
-			}
-		});
-
-		ImageIcon logoIcon = new ImageIcon(getClass().getResource("/Icon/logo-.png"));
-		Image scaledShopp = logoIcon.getImage().getScaledInstance(76, 69, Image.SCALE_SMOOTH);
-		JLabel logo = new JLabel(new ImageIcon(scaledShopp));
-		logo.setBounds(0, 23, 76, 69);
-		panel.add(logo);
-
-		TrangChinh = new JPanel();
-		TrangChinh.setBounds(81, 11, 895, 652);
-		TrangChinh.setBackground(new Color(0, 0, 121));
-		contentPane.add(TrangChinh);
-		TrangChinh.setLayout(null);
-
-		JLabel TrangChuLabel = new JLabel("TRANG CHỦ");
-		TrangChuLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		TrangChuLabel.setForeground(new Color(255, 255, 255));
-		TrangChuLabel.setBounds(10, 26, 161, 43);
-		TrangChinh.add(TrangChuLabel);
-
-		JButton login_bnt = new JButton();
-		login_bnt.setBorderPainted(false);
-		login_bnt.setContentAreaFilled(false);
-		ImageIcon originalIcon = new ImageIcon(TrangChu.class.getResource("/Icon/login.png"));
-		Image scaledImg = originalIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		ImageIcon resizedIcon = new ImageIcon(scaledImg);
-		login_bnt.setIcon(resizedIcon);
-		login_bnt.setBounds(824, 11, 50, 43);
-		TrangChinh.add(login_bnt);
-		login_bnt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Hiển thị thông báo xác nhận
-				int confirm = JOptionPane.showConfirmDialog(TrangChu.this, "Bạn có muốn thoát trang không?",
-						"Xác nhận thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-				if (confirm == JOptionPane.YES_OPTION) {
-					// Đóng cửa sổ hiện tại
-					dispose();
-					// Mở cửa sổ đăng nhập
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								Login loginFrame = new Login();
-								loginFrame.setVisible(true);
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
-					});
-				}
-				// Nếu chọn "Không", không làm gì cả
-			}
-		});
-
-		JButton ThongBao_bnt = new JButton();
-		ThongBao_bnt.setBorderPainted(false);
-		ThongBao_bnt.setContentAreaFilled(false);
-		ImageIcon originalIcon1 = new ImageIcon(TrangChu.class.getResource("/Icon/chuong2.png"));
-		Image scaledImg1 = originalIcon1.getImage().getScaledInstance(37, 37, Image.SCALE_SMOOTH);
-		ImageIcon resizedIcon1 = new ImageIcon(scaledImg1);
-		ThongBao_bnt.setIcon(resizedIcon1);
-		ThongBao_bnt.setBounds(745, 11, 57, 39);
-		TrangChinh.add(ThongBao_bnt);
-		ThongBao_bnt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Hiển thị thông báo
-				JOptionPane.showMessageDialog(TrangChu.this, "Bạn không có thông báo mới!", "Thông Báo",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-
-		JButton btn_Vie = new JButton("Vie", null);
-		btn_Vie.setBorderPainted(false);
-		btn_Vie.setContentAreaFilled(false);
-		ImageIcon originalIcon2 = new ImageIcon(TrangChu.class.getResource("/Icon/co.png"));
-		Image scaledImg2 = originalIcon2.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon resizedIcon2 = new ImageIcon(scaledImg2);
-		btn_Vie.setIcon(resizedIcon2);
-		btn_Vie.setBackground(new Color(0, 0, 128));
-		btn_Vie.setForeground(new Color(255, 255, 255));
-		btn_Vie.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		btn_Vie.setBounds(645, 11, 102, 43);
-		TrangChinh.add(btn_Vie);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 90, 443, 267);
-		TrangChinh.add(panel_1);
-		panel_1.setLayout(null);
-
-		JLabel lblNewLabel_1 = new JLabel("NHÓM 9");
-		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		lblNewLabel_1.setForeground(new Color(255, 0, 0));
-		lblNewLabel_1.setBounds(173, 11, 101, 24);
-		panel_1.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel("QUẢN LÝ LỚP HỌC ONLINE");
-		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		lblNewLabel_2.setForeground(new Color(0, 0, 160));
-		lblNewLabel_2.setBounds(88, 46, 284, 24);
-		panel_1.add(lblNewLabel_2);
-
-		JLabel lblNewLabel_3 = new JLabel("1. Đặng Thu Huyền                  - N21DCVT040");
-		lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblNewLabel_3.setBounds(66, 97, 322, 24);
-		panel_1.add(lblNewLabel_3);
-
-		JLabel lblNewLabel_4 = new JLabel("2. Trần Minh Thương             -  N21DCVT101");
-		lblNewLabel_4.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblNewLabel_4.setBounds(66, 132, 322, 28);
-		panel_1.add(lblNewLabel_4);
-
-		JLabel lblNewLabel_5 = new JLabel("3. Trần Nguyễn Tuấn Khanh  - N21DCVT045");
-		lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblNewLabel_5.setBounds(66, 171, 337, 28);
-		panel_1.add(lblNewLabel_5);
-
-		JLabel lblNewLabel_6 = new JLabel("4. Nguyễn Đình lân                  - N21DCVT0");
-		lblNewLabel_6.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblNewLabel_6.setBounds(66, 213, 322, 24);
-		panel_1.add(lblNewLabel_6);
-
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setBounds(10, 368, 875, 259);
-		TrangChinh.add(panel_1_1);
-		panel_1_1.setLayout(null);
-
-		JPanel panel_GV = new JPanel();
-		panel_GV.setBackground(new Color(255, 138, 21));
-		panel_GV.setBounds(300, 48, 283, 187);
-		panel_1_1.add(panel_GV);
-		panel_GV.setLayout(null);
-
-		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(142, 34, 4, 119);
-		panel_GV.add(panel_2_1);
-
-		JLabel lbl_GV = new JLabel("GIẢNG VIÊN");
-		lbl_GV.setForeground(Color.WHITE);
-		lbl_GV.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lbl_GV.setBounds(156, 110, 100, 26);
-		panel_GV.add(lbl_GV);
-
-		ImageIcon gvIcon = new ImageIcon(getClass().getResource("/Icon/GiangVien.png"));
-		Image scaledShopp2 = gvIcon.getImage().getScaledInstance(95, 85, Image.SCALE_SMOOTH);
-		JLabel gv = new JLabel(new ImageIcon(scaledShopp2));
-		gv.setBounds(32, 45, 100, 95);
-		panel_GV.add(gv);
-
-		JPanel panel_SV = new JPanel();
-		panel_SV.setBackground(new Color(255, 36, 36));
-		panel_SV.setBounds(10, 48, 280, 187);
-		panel_1_1.add(panel_SV);
-		panel_SV.setLayout(null);
-
-		JLabel lbl_sv = new JLabel("SINH VIÊN");
-		lbl_sv.setForeground(new Color(255, 255, 255));
-		lbl_sv.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lbl_sv.setBounds(152, 111, 100, 26);
-		panel_SV.add(lbl_sv);
-
-		ImageIcon svIcon = new ImageIcon(getClass().getResource("/Icon/sv.png"));
-		Image scaledShopp1 = svIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-		JLabel sv = new JLabel(new ImageIcon(scaledShopp1));
-		sv.setBounds(24, 52, 85, 85);
-		panel_SV.add(sv);
-
-		JPanel panel_2_1_1 = new JPanel();
-		panel_2_1_1.setBounds(138, 35, 4, 119);
-		panel_SV.add(panel_2_1_1);
-
-		JPanel panel_BT = new JPanel();
-		panel_BT.setBackground(new Color(38, 147, 255));
-		panel_BT.setBounds(593, 48, 272, 187);
-		panel_1_1.add(panel_BT);
-		panel_BT.setLayout(null);
-
-		JPanel panel_2_2 = new JPanel();
-		panel_2_2.setBounds(144, 37, 4, 119);
-		panel_BT.add(panel_2_2);
-
-		JLabel lbl_GV_1 = new JLabel("BÀI TẬP");
-		lbl_GV_1.setForeground(Color.WHITE);
-		lbl_GV_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lbl_GV_1.setBounds(158, 111, 100, 26);
-		panel_BT.add(lbl_GV_1);
-
-		ImageIcon btIcon = new ImageIcon(getClass().getResource("/Icon/vo.png"));
-		Image scaledShopp3 = btIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-		JLabel bt = new JLabel(new ImageIcon(scaledShopp3));
-		bt.setBounds(36, 53, 85, 85);
-		panel_BT.add(bt);
-
-		JLabel lblNewLabel = new JLabel("THỐNG KÊ");
-		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		lblNewLabel.setForeground(new Color(0, 0, 160));
-		lblNewLabel.setBackground(new Color(0, 0, 160));
-		lblNewLabel.setBounds(392, 11, 126, 26);
-		panel_1_1.add(lblNewLabel);
-
-		// Khởi tạo panel_1_2 cho lịch
-		JPanel panel_1_2 = new JPanel();
-		panel_1_2.setBounds(468, 90, 417, 267);
-		panel_1_2.setBackground(new Color(255, 255, 255));
-		panel_1_2.setLayout(new BorderLayout());
-		TrangChinh.add(panel_1_2);
-
-		// Phần đầu lịch (Tháng Trước, Tháng/Năm, Tháng Sau)
-		JPanel headerPanel = new JPanel();
-		headerPanel.setForeground(new Color(0, 0, 121));
-		headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-		headerPanel.setBackground(new Color(255, 204, 0));
-		headerPanel.setPreferredSize(new Dimension(417, 35));
-
-		JButton prevButton = new JButton("<");
-		prevButton.setFont(new Font("Times New Roman", Font.BOLD, 18)); // Tăng cỡ font
-		prevButton.setBackground(defaultColor);
-		prevButton.setForeground(new Color(0, 0, 121));
-		prevButton.setPreferredSize(new Dimension(40, 25)); // Tăng kích thước nút
-		prevButton.setBorder(new EmptyBorder(0, 0, 0, 0)); // Xóa viền mặc định
-		prevButton.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa
-		prevButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				calendar.add(Calendar.MONTH, -1);
-				updateCalendar();
-			}
-		});
-
-		monthYearLabel = new JLabel(monthYearFormat.format(calendar.getTime()));
-		monthYearLabel.setBackground(new Color(0, 0, 0));
-		monthYearLabel.setForeground(new Color(0, 0, 0));
-		monthYearLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
-
-		JButton nextButton = new JButton(">");
-		nextButton.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		nextButton.setBackground(defaultColor);
-		nextButton.setForeground(new Color(0, 0, 121));
-		nextButton.setPreferredSize(new Dimension(40, 25));
-		nextButton.setBorder(new EmptyBorder(0, 0, 0, 0));
-		nextButton.setHorizontalAlignment(SwingConstants.CENTER);
-		nextButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				calendar.add(Calendar.MONTH, 1);
-				updateCalendar();
-			}
-		});
-
-		headerPanel.add(prevButton);
-		headerPanel.add(monthYearLabel);
-		headerPanel.add(nextButton);
-		panel_1_2.add(headerPanel, BorderLayout.NORTH);
-
-		// Bảng lịch
-		String[] columns = { "CN", "T2", "T3", "T4", "T5", "T6", "T7" };
-		tableModel = new DefaultTableModel(null, columns) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false; // Không cho phép chỉnh sửa ô
-			}
-		};
-		calendarTable = new JTable(tableModel);
-		calendarTable.setRowHeight(38);
-		calendarTable.setGridColor(Color.LIGHT_GRAY);
-		calendarTable.setShowGrid(true);
-		calendarTable.setBackground(Color.WHITE);
-		calendarTable.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		calendarTable.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 12));
-		calendarTable.getTableHeader().setBackground(new Color(200, 200, 200));
-		calendarTable.getTableHeader().setForeground(new Color(0, 0, 121));
-
-		// Tùy chỉnh renderer để khoanh tròn ngày hiện tại
-		calendarTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-			@Override
-			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-					boolean hasFocus, int row, int column) {
-				Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				c.setForeground(Color.BLACK);
-				c.setBackground(Color.WHITE);
-
-				if (value != null && !value.toString().isEmpty()) {
-					int day = Integer.parseInt(value.toString());
-					Calendar cellCal = (Calendar) calendar.clone();
-					cellCal.set(Calendar.DAY_OF_MONTH, day);
-					if (cellCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-							&& cellCal.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-							&& cellCal.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
-						c.setForeground(Color.RED);
-						c.setFont(new Font("Times New Roman", Font.BOLD, 15));
-
-					}
-				}
-				setHorizontalAlignment(CENTER);
-				return c;
-			}
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				if (getText() != null && !getText().isEmpty()) {
-					int day = Integer.parseInt(getText());
-					Calendar cellCal = (Calendar) calendar.clone();
-					cellCal.set(Calendar.DAY_OF_MONTH, day);
-					if (cellCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-							&& cellCal.get(Calendar.MONTH) == today.get(Calendar.MONTH)
-							&& cellCal.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
-						Graphics2D g2d = (Graphics2D) g.create();
-						g2d.setColor(new Color(0, 0, 121));
-						g2d.setStroke(new BasicStroke(1)); // Độ dày vòng tròn
-						int size = Math.min(getWidth(), getHeight()) - 10; // Kích thước vòng tròn
-						int x = (getWidth() - size) / 2;
-						int y = (getHeight() - size) / 2;
-						g2d.drawOval(x, y, size, size); // Vẽ vòng tròn
-						g2d.dispose();
-					}
-				}
-			}
-		});
-
-		// Điều chỉnh chiều rộng cột
-		for (int i = 0; i < calendarTable.getColumnCount(); i++) {
-			calendarTable.getColumnModel().getColumn(i).setPreferredWidth(417 / 7);
-		}
-
-		JScrollPane scrollPane = new JScrollPane(calendarTable);
-		panel_1_2.add(scrollPane, BorderLayout.CENTER);
-
-		// Cập nhật lịch lần đầu
-		updateCalendar();
-		initialComponents = TrangChinh.getComponents();
-	}
-
-	private void updateCalendar() {
-		// Cập nhật nhãn tháng/năm
-		monthYearLabel.setText(monthYearFormat.format(calendar.getTime()));
-
-		// Xóa bảng
-		tableModel.setRowCount(0);
-
-		// Lấy ngày đầu tháng và số ngày trong tháng
-		Calendar tempCal = (Calendar) calendar.clone();
-		tempCal.set(Calendar.DAY_OF_MONTH, 1);
-		int firstDayOfWeek = tempCal.get(Calendar.DAY_OF_WEEK) - 1; // 0=CN, 1=T2,...
-		int daysInMonth = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-		// Tính số hàng cần thiết
-		int totalCells = firstDayOfWeek + daysInMonth;
-		int rows = (int) Math.ceil(totalCells / 7.0);
-
-		// Điền dữ liệu vào bảng
-		int day = 1;
-		for (int row = 0; row < rows; row++) {
-			String[] rowData = new String[7];
-			for (int col = 0; col < 7; col++) {
-				int cellIndex = row * 7 + col;
-				if (cellIndex < firstDayOfWeek || day > daysInMonth) {
-					rowData[col] = "";
-				} else {
-					rowData[col] = String.valueOf(day);
-					day++;
-				}
-			}
-			tableModel.addRow(rowData);
-		}
-
-		initialComponents = TrangChinh.getComponents();
-	}
-
-	private JButton createButton(String iconPath, int yPos) {
-		JButton button = new JButton();
-		ImageIcon originalIcon = new ImageIcon(TrangChu.class.getResource(iconPath));
-		Image resizedImage = originalIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		button.setIcon(new ImageIcon(resizedImage));
-		button.setBounds(0, yPos, 76, 76);
-		button.setOpaque(true);
-		button.setBorderPainted(false);
-		button.setContentAreaFilled(false);
-		return button;
-	}
-
-	private void resetButtonColors() {
-		for (JButton button : menuButtons) {
-			button.setOpaque(true);
-			button.setContentAreaFilled(false);
-			button.setBackground(null);
-		}
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TrangChu frame = new TrangChu();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.*;
+
+import com.toedter.calendar.JDateChooser;
+
+public class SinhVien extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+    private JTextField HoTen_text;
+    private JTextField Mssv_text;
+    private JTextField Email_text;
+    private JDateChooser NgaySinh;
+    private JTextField ThoiGian_text;
+    private JTextField MaMon_text;
+    private JTextField SoTin_text;
+    private JComboBox<String> Lop_ComboBox;
+    private JComboBox<String> GioiTinh_ComboBox;
+    private List<JCheckBox> subjectCheckBoxes;
+    private ThongTinSinhVien tempStudentInfo;
+
+    // Thông tin kết nối database
+    private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
+    private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
+    private static final String DB_PASSWORD = "MinhThuong0808";
+
+    // Danh sách môn học
+    private final String[][] subjects = {
+            {"Lập Trình Hướng Đối Tượng", "TEL1448", "3", "Thứ 3,Tiết 7-10"},
+            {"Hệ Thống nhúng IOT", "TEL1457", "3", "Thứ 2,Tiết 7-10"},
+            {"Hệ Thống Cảm Biến", "TEL1467", "3", "Thứ 2,Tiết 1-4"},
+            {"Điện Toán Đám Mây", "TEL1447", "2", "Thứ 5,Tiết 7-10"},
+            {"Phát Triển ứng Dụng", "TEL1461", "3", "Thứ 4,Tiết 7-10"},
+            {"Tiếng Anh", "BAS1160", "4", "Thứ 7,Tiết 1-4"}
+    };
+
+    public SinhVien() {
+        setBackground(new Color(0, 0, 121));
+        setBounds(81, 11, 895, 652);
+        setLayout(null);
+
+        JLabel lblNewLabel = new JLabel("SINH VIÊN");
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
+        lblNewLabel.setForeground(new Color(255, 255, 255));
+        lblNewLabel.setBounds(10, 39, 132, 43);
+        add(lblNewLabel);
+
+        // Panel nhập thông tin sinh viên
+        JPanel panel = new JPanel();
+        panel.setBounds(12, 85, 432, 448);
+        add(panel);
+        panel.setLayout(null);
+
+        JLabel lblNewLabel_2_1 = new JLabel("NHẬP THÔNG TIN SINH VIÊN");
+        lblNewLabel_2_1.setForeground(new Color(0, 0, 121));
+        lblNewLabel_2_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        lblNewLabel_2_1.setBounds(51, 0, 299, 69);
+        panel.add(lblNewLabel_2_1);
+
+        JLabel HoTen_Label = new JLabel("HỌ TÊN :");
+        HoTen_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        HoTen_Label.setBounds(18, 74, 81, 29);
+        panel.add(HoTen_Label);
+
+        JLabel MSSV_Label = new JLabel("MSSV :");
+        MSSV_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        MSSV_Label.setBounds(19, 127, 81, 29);
+        panel.add(MSSV_Label);
+
+        JLabel Lop_Label = new JLabel("LỚP :");
+        Lop_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        Lop_Label.setBounds(18, 187, 81, 29);
+        panel.add(Lop_Label);
+
+        JLabel NgaySinh_label = new JLabel("NGÀY SINH:");
+        NgaySinh_label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        NgaySinh_label.setBounds(18, 250, 103, 29);
+        panel.add(NgaySinh_label);
+
+        JLabel GioiTinh_Label = new JLabel("GIỚI TÍNH:");
+        GioiTinh_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        GioiTinh_Label.setBounds(256, 250, 94, 29);
+        panel.add(GioiTinh_Label);
+
+        JLabel Email_Label = new JLabel("EMAIL :");
+        Email_Label.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        Email_Label.setBounds(18, 314, 81, 29);
+        panel.add(Email_Label);
+
+        HoTen_text = new JTextField();
+        HoTen_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        HoTen_text.setBounds(98, 72, 310, 30);
+        panel.add(HoTen_text);
+        HoTen_text.setColumns(10);
+
+        Mssv_text = new JTextField();
+        Mssv_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        Mssv_text.setColumns(10);
+        Mssv_text.setBounds(98, 127, 310, 30);
+        panel.add(Mssv_text);
+
+        Email_text = new JTextField();
+        Email_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        Email_text.setColumns(10);
+        Email_text.setBounds(98, 314, 310, 30);
+        panel.add(Email_text);
+
+        NgaySinh = new JDateChooser();
+        NgaySinh.setBounds(112, 249, 130, 30);
+        NgaySinh.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        NgaySinh.setDateFormatString("dd/MM/yyyy");
+        panel.add(NgaySinh);
+
+        String[] items = {"", "Nam", "Nữ"};
+        GioiTinh_ComboBox = new JComboBox<>(items);
+        GioiTinh_ComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        GioiTinh_ComboBox.setBounds(343, 250, 65, 29);
+        panel.add(GioiTinh_ComboBox);
+
+        String[] items2 = {"", "D21CQVTHI01-N", "D21CQVTVT01-N", "D21CQVTMD01-N", "D22CQVT01-N", "D23CQVT01-N"};
+        Lop_ComboBox = new JComboBox<>(items2);
+        Lop_ComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        Lop_ComboBox.setBounds(98, 187, 310, 29);
+        panel.add(Lop_ComboBox);
+
+        // Panel nhập thông tin khóa học
+        JPanel panel_1 = new JPanel();
+        panel_1.setBounds(454, 85, 432, 448);
+        add(panel_1);
+        panel_1.setLayout(null);
+
+        JLabel lblNewLabel_2_1_1 = new JLabel("NHẬP THÔNG TIN KHÓA HỌC");
+        lblNewLabel_2_1_1.setForeground(new Color(0, 0, 121));
+        lblNewLabel_2_1_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        lblNewLabel_2_1_1.setBounds(66, 0, 299, 69);
+        panel_1.add(lblNewLabel_2_1_1);
+
+        JLabel HoTen_Label_1 = new JLabel("MÔN HỌC :");
+        HoTen_Label_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        HoTen_Label_1.setBounds(24, 71, 103, 29);
+        panel_1.add(HoTen_Label_1);
+
+        subjectCheckBoxes = new ArrayList<>();
+        int yPosition = 71;
+        for (String[] subject : subjects) {
+            JCheckBox checkBox = new JCheckBox(subject[0]);
+            checkBox.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+            checkBox.setBounds(110, yPosition, 296, 30);
+            panel_1.add(checkBox);
+            subjectCheckBoxes.add(checkBox);
+            yPosition += 40;
+        }
+
+        ThoiGian_text = new JTextField();
+        ThoiGian_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        ThoiGian_text.setColumns(10);
+        ThoiGian_text.setBounds(114, 390, 296, 30);
+        ThoiGian_text.setEditable(false);
+        panel_1.add(ThoiGian_text);
+
+        MaMon_text = new JTextField();
+        MaMon_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        MaMon_text.setColumns(10);
+        MaMon_text.setBounds(114, 310, 296, 30);
+        MaMon_text.setEditable(false);
+        panel_1.add(MaMon_text);
+
+        JLabel Lop_Label_1 = new JLabel("MÃ MÔN :");
+        Lop_Label_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        Lop_Label_1.setBounds(24, 311, 81, 29);
+        panel_1.add(Lop_Label_1);
+
+        SoTin_text = new JTextField();
+        SoTin_text.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        SoTin_text.setColumns(10);
+        SoTin_text.setBounds(114, 350, 296, 30);
+        SoTin_text.setEditable(false);
+        panel_1.add(SoTin_text);
+
+        JLabel Sdt_Label_1 = new JLabel("THỜI GIAN:");
+        Sdt_Label_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        Sdt_Label_1.setBounds(24, 391, 93, 29);
+        panel_1.add(Sdt_Label_1);
+
+        JLabel SoTin_Label_1_1 = new JLabel("SỐ TÍN :");
+        SoTin_Label_1_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        SoTin_Label_1_1.setBounds(24, 351, 103, 29);
+        panel_1.add(SoTin_Label_1_1);
+
+        for (JCheckBox checkBox : subjectCheckBoxes) {
+            checkBox.addActionListener(e -> updateCourseInfo());
+        }
+
+        createTables();
+
+        JButton Luu_button = new JButton("LƯU");
+        Luu_button.setBackground(new Color(255, 140, 0));
+        Luu_button.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        Luu_button.setBounds(226, 563, 120, 44);
+        add(Luu_button);
+
+        JButton xuat_button = new JButton("XUẤT");
+        xuat_button.setBackground(new Color(255, 215, 0));
+        xuat_button.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        xuat_button.setBounds(572, 563, 120, 44);
+        xuat_button.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        add(xuat_button);
+
+     // Gắn sự kiện cho các nút
+        Luu_button.addActionListener(e -> Luu());
+        xuat_button.addActionListener(e -> Xuat());
+    }
+    
+ // Xử lý sự kiện nút LƯU
+    private void Luu() {
+        if (!validateInput()) {
+            return;
+        }
+        saveToDatabase();
+    }
+
+    // Xử lý sự kiện nút XUẤT
+    private void Xuat() {
+        if (tempStudentInfo == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Chưa có dữ liệu nào được lưu. Vui lòng nhấn LƯU trước!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else {
+            EventQueue.invokeLater(() -> {
+                ThongTinSinhVien frame = new ThongTinSinhVien(
+                        tempStudentInfo.getHoTen(),
+                        tempStudentInfo.getMssv(),
+                        tempStudentInfo.getLop(),
+                        tempStudentInfo.getNgaySinh(),
+                        tempStudentInfo.getGioiTinh(),
+                        tempStudentInfo.getEmail(),
+                        tempStudentInfo.getMonHoc(),
+                        tempStudentInfo.getMaMon(),
+                        tempStudentInfo.getSoTin(),
+                        tempStudentInfo.getThoiGian());
+                frame.setVisible(true);
+            });
+        }
+    }
+
+    //Kiểm tra tính hợp lệ của dữ liệu nhập vào trước khi lưu vào cơ sở dữ liệu
+    private boolean validateInput() {
+        // Kiểm tra trường rỗng
+        if (HoTen_text.getText().trim().isEmpty() ||
+                Mssv_text.getText().trim().isEmpty() ||
+                Lop_ComboBox.getSelectedIndex() == 0 ||
+                NgaySinh.getDate() == null ||
+                GioiTinh_ComboBox.getSelectedIndex() == 0 ||
+                Email_text.getText().trim().isEmpty() ||
+                !isAnySubjectSelected()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ tất cả các thông tin và chọn ít nhất một môn học!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra định dạng họ tên
+        String hoTen = HoTen_text.getText().trim();
+        if (!hoTen.matches("^[a-zA-Z\\sÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠạẢảẤấẦầẨẩẪẫẬậẮắẰằẲẳẴẵẶặẸẹẺẻẼẽẾếỀềỂểỄễỆệỈỉỊịỌọỎỏỐốỒồỔổỖỗỘộỚớỜờỞởỠỡỢợỤụỦủỨứỪừỬửỮữỰựỲỳỴỵỶỷỸỹ]*$")) {
+            JOptionPane.showMessageDialog(this, "Họ tên chỉ được chứa chữ cái và khoảng trắng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra định dạng MSSV
+        String mssv = Mssv_text.getText().trim();
+        if (!mssv.matches("^N\\d{2}DCVT\\d{3}$")) {
+            JOptionPane.showMessageDialog(this, "MSSV phải có định dạng N + 2 số + DCVT + 3 số (VD: N21DCVT101)", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra định dạng Email
+        String email = Email_text.getText().trim();
+        if (!email.matches("^[a-zA-Z0-9]+@student\\.ptithcm\\.edu\\.vn$")) {
+            JOptionPane.showMessageDialog(this, "Email phải có định dạng [số/chữ]@student.ptithcm.edu.vn", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra ngày sinh không trong tương lai
+        Date today = new Date();
+        if (NgaySinh.getDate().after(today)) {
+            JOptionPane.showMessageDialog(this, "Ngày sinh không được là ngày trong tương lai!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Kiểm tra xung đột thời gian môn học
+        if (!checkScheduleConflict()) {
+            JOptionPane.showMessageDialog(this, "Có môn học bị trùng thời gian. Vui lòng chọn lại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    //Kiểm tra xem các môn học được chọn có trùng thời gian hay không
+    private boolean checkScheduleConflict() {
+        Set<String> selectedTimes = new HashSet<>();
+        for (int i = 0; i < subjectCheckBoxes.size(); i++) {
+            if (subjectCheckBoxes.get(i).isSelected()) {
+                String time = subjects[i][3];
+                if (!selectedTimes.add(time)) {
+                    return false; // Trùng thời gian
+                }
+            }
+        }
+        return true;
+    }
+
+    //Cập nhật thông tin môn học khi người dùng chọn môn
+    private void updateCourseInfo() {
+        List<String> selectedMaMon = new ArrayList<>();
+        List<String> selectedSoTin = new ArrayList<>();
+        List<String> selectedThoiGian = new ArrayList<>();
+
+        for (int i = 0; i < subjectCheckBoxes.size(); i++) {
+            if (subjectCheckBoxes.get(i).isSelected()) {
+                selectedMaMon.add(subjects[i][1]);
+                selectedSoTin.add(subjects[i][2]);
+                selectedThoiGian.add(subjects[i][3]);
+            }
+        }
+
+        MaMon_text.setText(String.join(", ", selectedMaMon));
+        SoTin_text.setText(String.join(", ", selectedSoTin));
+        ThoiGian_text.setText(String.join(", ", selectedThoiGian));
+    }
+
+    //Kiểm tra xem có ít nhất một môn học được chọn
+    private boolean isAnySubjectSelected() {
+        for (JCheckBox checkBox : subjectCheckBoxes) {
+            if (checkBox.isSelected()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Tạo hai bảng students và courses trong cơ sở dữ liệu
+    private void createTables() {
+        Connection conn = null; 
+        Statement stmt = null;
+
+        try {
+            conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            stmt = conn.createStatement();
+
+            //Tạo bảng students để lưu thông tin sinh viên
+            String sqlStudents = "CREATE TABLE IF NOT EXISTS students (" +
+                    "mssv VARCHAR(50) PRIMARY KEY," +
+                    "hoten VARCHAR(100)," +
+                    "ngaysinh DATE," +
+                    "gioitinh VARCHAR(10)," +
+                    "lop VARCHAR(50)," +
+                    "email VARCHAR(100))";
+            stmt.executeUpdate(sqlStudents);
+
+            //Tạo bảng courses để lưu thông tin môn học của sinh viên
+            String sqlCourses = "CREATE TABLE IF NOT EXISTS courses (" +
+                    "id SERIAL PRIMARY KEY," +
+                    "mssv VARCHAR(50) REFERENCES students(mssv)," +
+                    "monhoc VARCHAR(100)," +
+                    "mamon VARCHAR(50)," +
+                    "sotin INTEGER," +
+                    "thoigian VARCHAR(50))";
+            stmt.executeUpdate(sqlCourses);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi tạo bảng: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    //Lưu thông tin sinh viên và các môn học
+    private void saveToDatabase() {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            conn.setAutoCommit(false); // Bắt đầu giao dịch
+
+            String mssv = Mssv_text.getText().trim();
+
+            // Kiểm tra MSSV tồn tại
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT mssv FROM students WHERE mssv = '" + mssv + "'");
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "MSSV đã tồn tại trong cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                conn.rollback();
+                return;
+            }
+
+            // Lưu thông tin sinh viên
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = NgaySinh.getDate();
+            String ngaySinh = date != null ? "'" + sdf.format(date) + "'" : "NULL";
+            String sqlStudent = "INSERT INTO students (mssv, hoten, ngaysinh, gioitinh, lop, email) VALUES (" +
+                    "'" + mssv + "', " +
+                    "'" + HoTen_text.getText().trim() + "', " +
+                    ngaySinh + ", " +
+                    "'" + GioiTinh_ComboBox.getSelectedItem().toString() + "', " +
+                    "'" + Lop_ComboBox.getSelectedItem().toString() + "', " +
+                    "'" + Email_text.getText().trim() + "')";
+            stmt.executeUpdate(sqlStudent);
+
+            // Lưu thông tin khóa học
+            List<String> selectedSubjects = new ArrayList<>();
+            List<String> selectedMaMon = new ArrayList<>();
+            List<String> selectedSoTin = new ArrayList<>();
+            List<String> selectedThoiGian = new ArrayList<>();
+
+            for (int i = 0; i < subjectCheckBoxes.size(); i++) {
+                if (subjectCheckBoxes.get(i).isSelected()) {
+                    String sqlCourse = "INSERT INTO courses (mssv, monhoc, mamon, sotin, thoigian) VALUES (" +
+                            "'" + mssv + "', " +
+                            "'" + subjects[i][0] + "', " +
+                            "'" + subjects[i][1] + "', " +
+                            subjects[i][2] + ", " +
+                            "'" + subjects[i][3] + "')";
+                    stmt.executeUpdate(sqlCourse);
+
+                    selectedSubjects.add(subjects[i][0]);
+                    selectedMaMon.add(subjects[i][1]);
+                    selectedSoTin.add(subjects[i][2]);
+                    selectedThoiGian.add(subjects[i][3]);
+                }
+            }
+
+            // Lưu dữ liệu vào biến tạm
+            SimpleDateFormat sdfDisplay = new SimpleDateFormat("dd/MM/yyyy");
+            String ngaySinhDisplay = date != null ? sdfDisplay.format(date) : "";
+            tempStudentInfo = new ThongTinSinhVien(
+                    HoTen_text.getText().trim(),
+                    mssv,
+                    Lop_ComboBox.getSelectedItem().toString(),
+                    ngaySinhDisplay,
+                    GioiTinh_ComboBox.getSelectedItem().toString(),
+                    Email_text.getText().trim(),
+                    String.join(", ", selectedSubjects),
+                    String.join(", ", selectedMaMon),
+                    String.join(", ", selectedSoTin),
+                    String.join(", ", selectedThoiGian));
+
+            conn.commit(); // Hoàn tất giao dịch
+            JOptionPane.showMessageDialog(this, "Lưu thông tin thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            clearForm();
+
+        } catch (SQLException ex) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(this, "Lỗi khi lưu vào cơ sở dữ liệu: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Số tín phải là số nguyên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    //Xóa toàn bộ dữ liệu trên giao diện để chuẩn bị cho lần nhập mới
+    private void clearForm() {
+        HoTen_text.setText("");
+        Mssv_text.setText("");
+        Email_text.setText("");
+        NgaySinh.setDate(null);
+        ThoiGian_text.setText("");
+        MaMon_text.setText("");
+        SoTin_text.setText("");
+        Lop_ComboBox.setSelectedIndex(0);
+        GioiTinh_ComboBox.setSelectedIndex(0);
+        for (JCheckBox checkBox : subjectCheckBoxes) {
+            checkBox.setSelected(false);
+        }
+    }
 }
