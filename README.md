@@ -62,7 +62,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 👩‍🏫 Giao diện Giảng viên
 
-![image](![image](https://github.com/user-attachments/assets/89abc21b-1505-450a-8069-e2074d43011f))
+![image](https://github.com/user-attachments/assets/89abc21b-1505-450a-8069-e2074d43011f))
 
 ---
 
