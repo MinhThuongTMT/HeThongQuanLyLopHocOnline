@@ -36,7 +36,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 🔐 Giao diện Đăng nhập / Đăng ký
 
-(![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
+![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
 
 ![image](https://github.com/user-attachments/assets/b74846cf-3ffd-47d6-9a7c-3873b21ddd0d)
 
@@ -44,55 +44,67 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 🏠 Giao diện Trang chủ
 
-![Giao diện trang chủ](![image](https://github.com/user-attachments/assets/b80b2489-7f60-4fec-8f92-d95a004259e0))
+![image](https://github.com/user-attachments/assets/6fecad28-baac-459a-90ac-0d4690f1d86e)
 
 ---
 
 ## 👨‍🎓 Giao diện Sinh viên
 
-![Giao diện sinh viên](![image](https://github.com/user-attachments/assets/a3044c8b-439f-4fa5-a69b-4907eafbf388))
+![image](https://github.com/user-attachments/assets/6523674c-45af-4922-b9b0-5830f15d51aa)
 
 ---
 
 ## 📊 Giao diện Thông Tin Sinh Viên
 
-![Giao diện thống kê](![image](https://github.com/user-attachments/assets/1eac9333-b891-4cf5-bc6c-cbca09a43c3f))
+![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
 
 ---
 
 ## 👩‍🏫 Giao diện Giảng viên
 
-![Giao diện giảng viên](![image](https://github.com/user-attachments/assets/89afacab-acaf-499f-900b-a05aee8bc2af))
+![image](![image](https://github.com/user-attachments/assets/89abc21b-1505-450a-8069-e2074d43011f))
 
 ---
 
 ## 📊 Giao diện Thông Tin Giảng Viên
 
-![Giao diện thống kê](![image](![image](https://github.com/user-attachments/assets/e84b93a4-75a4-4783-9767-a3729f96b5b6)))
+![image](https://github.com/user-attachments/assets/e84b93a4-75a4-4783-9767-a3729f96b5b6)
 
 ---
 
 ## 📊 Giao diện Nộp Bài Tập
 
-![Giao diện thống kê](![image](![image](![image](https://github.com/user-attachments/assets/f2008d97-646c-4a57-922a-c12dc3c78648))))
+![image](https://github.com/user-attachments/assets/f2008d97-646c-4a57-922a-c12dc3c78648)
+
+---
+
+## 📊 Giao diện Giao Bài Tập
+
+![image](![image](https://github.com/user-attachments/assets/8e60ff4b-12fb-4af0-8a42-9ed378b84257))
+
+---
+
+## 📊 Giao diện Chấm Điểm
+
+![image](![Uploading image.png…]())
+
+---
+
+## 📊 Giao diện Điểm Danh
+
+![image](![Uploading image.png…]())
 
 ---
 
 ## 📚 Giao diện Quản lý Bài tập
 
-![Giao diện bài tập](![image](https://github.com/user-attachments/assets/135d803b-1bdd-44e6-b139-45d4a083add5))
+![image](https://github.com/user-attachments/assets/135d803b-1bdd-44e6-b139-45d4a083add5)
 
 ---
 
 ## 🏫 Giao diện Quản lý Lớp học
 
 ![Giao diện lớp học](![Uploading image.png…]())
-
----
-
-## 📊 Giao diện Thống kê và Báo cáo
-
-![Giao diện thống kê](images/statistics.png)
 
 ---
 
@@ -106,7 +118,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 📁 Sơ đồ cơ sở dữ liệu
 
-![Sơ đồ CSDL](images/database_schema.png)
+![SO DO DATABASE](https://github.com/user-attachments/assets/829b84bd-c5ce-4e7a-bdc5-52170a840860)
 
 ---
 
@@ -141,4 +153,12 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 👉 [Mã nguồn trên GitHub](https://github.com/MinhThuongTMT/HeThongQuanLyLopHocOnline.git)
 
 ---
+
+## 🏆 Liên hệ
+
+💡 Nếu bạn thích dự án này, hãy ⭐️ trên GitHub nhé!
+
+📩 Liên hệ: tranminhthuong08082003@gmail.com | 
+
+📌 Tác giả: 🚀 Nhom 8 - PTIT! 🚀
 
