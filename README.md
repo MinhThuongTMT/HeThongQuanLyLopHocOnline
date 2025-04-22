@@ -8,7 +8,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
   <img src="https://img.shields.io/badge/Java-Swing-orange?style=flat&logo=java" />
   <img src="https://img.shields.io/badge/PostgreSQL-Database-blue?style=flat&logo=postgresql" />
   <img src="https://img.shields.io/badge/Supabase-Cloud-green?style=flat&logo=supabase" />
-  <img src="https://img.shields.io/badge/Project-PTIT-FF69B4?style=flat" />
+  <img src="https://img.shields.io/badge/Project-PTIT-red?style=flat" />
 </p>
 
 ---
