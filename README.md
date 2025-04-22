@@ -80,31 +80,31 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 📊 Giao diện Giao Bài Tập
 
-![image](https://github.com/user-attachments/assets/8e60ff4b-12fb-4af0-8a42-9ed378b84257)
+![image](https://github.com/user-attachments/assets/060b8430-93cd-46b2-aaa6-84e5f551681d)
 
 ---
 
 ## 📊 Giao diện Chấm Điểm
 
-![image](![Uploading image.png…]())
+![image](https://github.com/user-attachments/assets/b1b00f8c-5400-4367-9998-ecc9395de804)
 
 ---
 
 ## 📊 Giao diện Điểm Danh
 
-![image](![Uploading image.png…]())
+![image](https://github.com/user-attachments/assets/342c6ddc-cf12-47ed-8eca-ef5d7fc1c8d2)
 
 ---
 
 ## 📚 Giao diện Quản lý Bài tập
 
-![image](https://github.com/user-attachments/assets/135d803b-1bdd-44e6-b139-45d4a083add5)
+![image](https://github.com/user-attachments/assets/189f3eb7-1d93-478d-9972-640467156a48)
 
 ---
 
 ## 🏫 Giao diện Quản lý Lớp học
 
-![Giao diện lớp học](![Uploading image.png…]())
+![image](https://github.com/user-attachments/assets/43205af3-c432-40d0-8350-217a4df1baac)
 
 ---
 
