@@ -36,37 +36,57 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 🔐 Giao diện Đăng nhập / Đăng ký
 
-![Giao diện đăng nhập](images/login.png)
+![Giao diện đăng nhập](![image](![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)))
+
+![Giao diện đăng ký](![image](![image](https://github.com/user-attachments/assets/b74846cf-3ffd-47d6-9a7c-3873b21ddd0d)))
 
 ---
 
 ## 🏠 Giao diện Trang chủ
 
-![Giao diện trang chủ](images/dashboard.png)
+![Giao diện trang chủ](![image](https://github.com/user-attachments/assets/b80b2489-7f60-4fec-8f92-d95a004259e0))
 
 ---
 
 ## 👨‍🎓 Giao diện Sinh viên
 
-![Giao diện sinh viên](images/student_info.png)
+![Giao diện sinh viên](![image](https://github.com/user-attachments/assets/a3044c8b-439f-4fa5-a69b-4907eafbf388))
+
+---
+
+## 📊 Giao diện Thông Tin Sinh Viên
+
+![Giao diện thống kê](![image](https://github.com/user-attachments/assets/1eac9333-b891-4cf5-bc6c-cbca09a43c3f))
 
 ---
 
 ## 👩‍🏫 Giao diện Giảng viên
 
-![Giao diện giảng viên](images/teacher_info.png)
+![Giao diện giảng viên](![image](https://github.com/user-attachments/assets/89afacab-acaf-499f-900b-a05aee8bc2af))
+
+---
+
+## 📊 Giao diện Thông Tin Giảng Viên
+
+![Giao diện thống kê](![image](![image](https://github.com/user-attachments/assets/e84b93a4-75a4-4783-9767-a3729f96b5b6)))
+
+---
+
+## 📊 Giao diện Nộp Bài Tập
+
+![Giao diện thống kê](![image](![image](![image](https://github.com/user-attachments/assets/f2008d97-646c-4a57-922a-c12dc3c78648))))
 
 ---
 
 ## 📚 Giao diện Quản lý Bài tập
 
-![Giao diện bài tập](images/assignment.png)
+![Giao diện bài tập](![image](https://github.com/user-attachments/assets/135d803b-1bdd-44e6-b139-45d4a083add5))
 
 ---
 
 ## 🏫 Giao diện Quản lý Lớp học
 
-![Giao diện lớp học](images/class_management.png)
+![Giao diện lớp học](![Uploading image.png…]())
 
 ---
 
