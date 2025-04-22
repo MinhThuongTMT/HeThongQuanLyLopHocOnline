@@ -56,7 +56,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 📊 Giao diện Thông Tin Sinh Viên
 
-![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
+![image](https://github.com/user-attachments/assets/f45828e1-192a-40ed-8191-f356f0ca3333)
 
 ---
 
