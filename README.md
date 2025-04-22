@@ -1,4 +1,3 @@
-Hãy giúp tôi tạo phần readme thật đẹp và cuốn hút người xem 
 # 🎓 HỆ THỐNG QUẢN LÝ LỚP HỌC ONLINE
 
 Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyến, giúp giảng viên và sinh viên thao tác với lớp học, bài tập, điểm danh, và chấm điểm thông qua một giao diện thân thiện và dễ sử dụng.
