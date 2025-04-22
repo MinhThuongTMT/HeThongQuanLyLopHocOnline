@@ -1,164 +1,138 @@
-# 🎓 HỆ THỐNG QUẢN LÝ LỚP HỌC ONLINE
+🎓 HỆ THỐNG QUẢN LÝ LỚP HỌC ONLINE
 
-Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyến, giúp giảng viên và sinh viên thao tác với lớp học, bài tập, điểm danh, và chấm điểm thông qua một giao diện thân thiện và dễ sử dụng.
+Một phần mềm quản lý lớp học trực tuyến hiện đại, hỗ trợ giảng viên và sinh viên quản lý lớp học, bài tập, điểm danh và chấm điểm một cách hiệu quả với giao diện thân thiện và dễ sử dụng.
 
----
+✨ Đặc điểm nổi bật
 
-## 📌 Mục tiêu hệ thống
+📚 Quản lý toàn diện: Thông tin lớp học, giảng viên, sinh viên được tổ chức khoa học.  
+📝 Bài tập & điểm danh: Giao bài, nộp bài, chấm điểm và điểm danh dễ dàng.  
+📊 Thống kê thời gian thực: Theo dõi tiến độ học tập và xuất báo cáo nhanh chóng.  
+🔒 Bảo mật: Đăng nhập/đăng ký an toàn với kết nối Supabase.  
+🖥️ Giao diện trực quan: Thiết kế hiện đại, tối ưu trải nghiệm người dùng.
 
-- Quản lý thông tin lớp học, giảng viên và sinh viên  
-- Điểm danh sinh viên, giao bài tập và chấm điểm  
-- Hỗ trợ giảng viên theo dõi tiến độ học tập  
-- Cung cấp báo cáo, thống kê theo thời gian thực  
 
----
+🎯 Mục tiêu dự án
 
-## ⚙️ Công nghệ sử dụng
+Tạo ra một hệ thống quản lý lớp học trực tuyến hiệu quả, giảm thiểu công việc thủ công.  
+Hỗ trợ giảng viên theo dõi tiến độ học tập của sinh viên.  
+Cung cấp công cụ quản lý bài tập, điểm danh và chấm điểm linh hoạt.  
+Đảm bảo khả năng mở rộng và tích hợp với các nền tảng khác trong tương lai.
 
-- 🧠 **Ngôn ngữ chính**: Java  
-- 💻 **Giao diện đồ họa**: Java Swing  
-- 🛢️ **Cơ sở dữ liệu**: PostgreSQL  
-- 🧰 **IDE phát triển**: Eclipse  
-- ☁️ **Kết nối Supabase** để lưu trữ người dùng  
 
----
+🛠️ Công nghệ sử dụng
 
-## 🖥️ Các chức năng chính
 
-- Quản lý thông tin sinh viên, giảng viên, lớp học  
-- Giao và nộp bài tập  
-- Chấm điểm và điểm danh  
-- Quản lý thông tin người dùng  
-- Xuất thống kê số lượng và kết quả học tập  
-- Lưu trữ/đọc dữ liệu bằng file  
 
----
+Công nghệ
+Mô tả
 
-## 🔐 Giao diện Đăng nhập / Đăng ký
 
-![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
 
-![image](https://github.com/user-attachments/assets/64982759-50e6-4f3e-a230-c07eb030fede)
+☕ Java
+Ngôn ngữ lập trình chính
 
----
 
-## 🏠 Giao diện Trang chủ
+🖼️ Java Swing
+Giao diện đồ họa người dùng
 
-![image](https://github.com/user-attachments/assets/6fecad28-baac-459a-90ac-0d4690f1d86e)
 
----
+🗄️ PostgreSQL
+Cơ sở dữ liệu quan hệ
 
-## 👨‍🎓 Giao diện Sinh viên
 
-![image](https://github.com/user-attachments/assets/6b29399a-4700-4451-a4a4-ec3c42fc7f8f)
+☁️ Supabase
+Lưu trữ và quản lý người dùng
 
----
 
-## 📊 Giao diện Thông Tin Sinh Viên
+🧰 Eclipse
+IDE phát triển
 
-![image](https://github.com/user-attachments/assets/f45828e1-192a-40ed-8191-f356f0ca3333)
 
----
 
-## 👩‍🏫 Giao diện Giảng viên
+🚀 Các chức năng chính
 
-![image](https://github.com/user-attachments/assets/e9a82ea9-8329-400f-baa5-f4f78c243841)
+Quản lý thông tin: Thêm, sửa, xóa thông tin sinh viên, giảng viên, lớp học.  
+Bài tập: Giao bài, nộp bài, quản lý và chấm điểm bài tập.  
+Điểm danh: Theo dõi sự tham gia của sinh viên trong các buổi học.  
+Thống kê: Xuất báo cáo về kết quả học tập và tiến độ.  
+Lưu trữ dữ liệu: Đọc/ghi dữ liệu thông qua file và cơ sở dữ liệu.  
+Đăng nhập/Đăng ký: Giao diện bảo mật, dễ sử dụng.
 
----
 
-## 📊 Giao diện Thông Tin Giảng Viên
+🖼️ Giao diện hệ thống
+🔐 Đăng nhập / Đăng ký
 
-![image](https://github.com/user-attachments/assets/e84b93a4-75a4-4783-9767-a3729f96b5b6)
+🏠 Trang chủ
 
----
+👨‍🎓 Giao diện Sinh viên
 
-## 📊 Giao diện Nộp Bài Tập
+👩‍🏫 Giao diện Giảng viên
 
-![image](https://github.com/user-attachments/assets/f2008d97-646c-4a57-922a-c12dc3c78648)
+📝 Quản lý Bài tập
 
----
+📋 Điểm danh & Quản lý Lớp học
 
-## 📊 Giao diện Giao Bài Tập
 
-![image](https://github.com/user-attachments/assets/060b8430-93cd-46b2-aaa6-84e5f551681d)
+🧩 Thiết kế OOP
 
----
+Kế thừa & Interface: Tăng tính tái sử dụng và bảo trì.  
+Tách biệt chức năng: Các class như QuanLySinhVien, QuanLyGiangVien, BaiTap, DiemDanh.  
+Nguyên lý SOLID: Đảm bảo mã nguồn dễ mở rộng và bảo trì.  
+Xử lý ngoại lệ: Tăng độ ổn định của hệ thống.
 
-## 📊 Giao diện Chấm Điểm
 
-![image](https://github.com/user-attachments/assets/b1b00f8c-5400-4367-9998-ecc9395de804)
+📁 Sơ đồ cơ sở dữ liệu
 
----
 
-## 📊 Giao diện Điểm Danh
+✅ Kết quả kiểm thử
 
-![image](https://github.com/user-attachments/assets/342c6ddc-cf12-47ed-8eca-ef5d7fc1c8d2)
+Giao diện: Hoạt động mượt mà, thân thiện với người dùng.  
+Chức năng: Thêm, sửa, xóa dữ liệu chính xác.  
+Kiểm thử: Đã thử nghiệm với nhiều kịch bản sử dụng, đảm bảo độ ổn định.
 
----
 
-## 📚 Giao diện Quản lý Bài tập
+🌟 Hướng phát triển
 
-![image](https://github.com/user-attachments/assets/189f3eb7-1d93-478d-9972-640467156a48)
+🌐 Tích hợp Web: Chuyển đổi hệ thống sang nền tảng web.  
+🔔 Thông báo thời gian thực: Cảnh báo về bài tập, điểm danh.  
+🌍 Đa ngôn ngữ: Hỗ trợ nhiều ngôn ngữ để mở rộng đối tượng người dùng.  
+☁️ Đồng bộ đám mây: Lưu trữ và truy cập dữ liệu từ mọi nơi.
 
----
 
-## 🏫 Giao diện Quản lý Lớp học
+👥 Nhóm phát triển
 
-![image](https://github.com/user-attachments/assets/43205af3-c432-40d0-8350-217a4df1baac)
 
----
 
-## 🧩 Mô hình OOP
+Tên
+Mã sinh viên
 
-- Sử dụng kế thừa, interface, xử lý ngoại lệ  
-- Tách các class theo chức năng như `QuanLySinhVien`, `QuanLyGiangVien`, `BaiTap`, `DiemDanh`, v.v.  
-- Áp dụng các nguyên lý SOLID và khả năng mở rộng dễ dàng  
 
----
 
-## 📁 Sơ đồ cơ sở dữ liệu
+Trần Minh Thương
+N21DCVT101
 
-![SO DO DATABASE](https://github.com/user-attachments/assets/829b84bd-c5ce-4e7a-bdc5-52170a840860)
 
----
+Trần Nguyễn Tuấn Khanh
+N21DCVT044
 
-## 🧪 Kết quả kiểm thử
 
-- Giao diện hoạt động ổn định  
-- Thao tác thêm/sửa/xóa dữ liệu chính xác  
-- Các chức năng được kiểm thử với nhiều trường hợp khác nhau  
+Đặng Thu Huyền
+N21DCVT040
 
----
 
-## 🚀 Hướng phát triển tương lai
+Nguyễn Đình Lân
+N21DCVT057
 
-- Kết nối hệ thống với nền tảng Web  
-- Hỗ trợ tính năng thông báo thời gian thực  
-- Triển khai đa ngôn ngữ  
-- Đồng bộ dữ liệu với đám mây  
 
----
+📩 Liên hệ: tranminhthuong08082003@gmail.com📌 Tác giả: Nhóm 8 - PTIT 🚀
 
-## 📎 Liên hệ nhóm phát triển
+📚 Tài liệu tham khảo
+🔗 Mã nguồn trên GitHub
 
-- **Trần Minh Thương** – N21DCVT101  
-- **Trần Nguyễn Tuấn Khanh** – N21DCVT044  
-- **Đặng Thu Huyền** – N21DCVT040  
-- **Nguyễn Đình Lân** – N21DCVT057  
+⭐️ Hỗ trợ dự án
+Nếu bạn yêu thích dự án này, hãy:  
 
----
+🌟 Star trên GitHub để ủng hộ chúng tôi!  
+💬 Gửi phản hồi hoặc góp ý qua email.
 
-## 🔗 Tham khảo
-
-👉 [Mã nguồn trên GitHub](https://github.com/MinhThuongTMT/HeThongQuanLyLopHocOnline.git)
-
----
-
-## 🏆 Liên hệ
-
-💡 Nếu bạn thích dự án này, hãy ⭐️ trên GitHub nhé!
-
-📩 Liên hệ: tranminhthuong08082003@gmail.com | 
-
-📌 Tác giả: 🚀 Nhom 8 - PTIT! 🚀
-
+Cảm ơn bạn đã quan tâm đến Hệ thống Quản lý Lớp học Online! 🚀
