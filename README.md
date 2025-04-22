@@ -38,7 +38,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
 
-![image](https://github.com/user-attachments/assets/b74846cf-3ffd-47d6-9a7c-3873b21ddd0d)
+![image](https://github.com/user-attachments/assets/64982759-50e6-4f3e-a230-c07eb030fede)
 
 ---
 
