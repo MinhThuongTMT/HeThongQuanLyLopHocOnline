@@ -148,12 +148,6 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ---
 
-## 🔗 Tham khảo
-
-👉 [Mã nguồn trên GitHub](https://github.com/MinhThuongTMT/HeThongQuanLyLopHocOnline.git)
-
----
-
 ## 🏆 Liên hệ
 
 💡 Nếu bạn thích dự án này, hãy ⭐️ trên GitHub nhé!
