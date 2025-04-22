@@ -36,9 +36,9 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 🔐 Giao diện Đăng nhập / Đăng ký
 
-![Giao diện đăng nhập](![image](![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)))
+![Giao diện đăng nhập](![image](![image](https://github.com/user-attachments/assets/8a4d3cb8-fec1-45fc-99c8-778a84002e42)
 
-![Giao diện đăng ký](![image](![image](https://github.com/user-attachments/assets/b74846cf-3ffd-47d6-9a7c-3873b21ddd0d)))
+![Giao diện đăng ký](![image](![image](https://github.com/user-attachments/assets/b74846cf-3ffd-47d6-9a7c-3873b21ddd0d))
 
 ---
 
