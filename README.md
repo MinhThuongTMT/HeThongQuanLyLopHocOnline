@@ -1,6 +1,15 @@
-# 🎓 HỆ THỐNG QUẢN LÝ LỚP HỌC ONLINE
+<h1 align="center">🎓 HỆ THỐNG QUẢN LÝ LỚP HỌC ONLINE</h1>
 
-Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyến, giúp giảng viên và sinh viên thao tác với lớp học, bài tập, điểm danh, và chấm điểm thông qua một giao diện thân thiện và dễ sử dụng.
+<p align="center">
+Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyến, giúp giảng viên và sinh viên thao tác hiệu quả với lớp học, bài tập, điểm danh và chấm điểm thông qua một giao diện trực quan, dễ sử dụng.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-Swing-orange?style=flat&logo=java" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-blue?style=flat&logo=postgresql" />
+  <img src="https://img.shields.io/badge/Supabase-Cloud-green?style=flat&logo=supabase" />
+  <img src="https://img.shields.io/badge/Project-PTIT-FF69B4?style=flat" />
+</p>
 
 ---
 
@@ -15,11 +24,13 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## ⚙️ Công nghệ sử dụng
 
-- 🧠 **Ngôn ngữ chính**: Java  
-- 💻 **Giao diện đồ họa**: Java Swing  
-- 🛢️ **Cơ sở dữ liệu**: PostgreSQL  
-- 🧰 **IDE phát triển**: Eclipse  
-- ☁️ **Kết nối Supabase** để lưu trữ người dùng  
+| Thành phần        | Mô tả                           |
+|-------------------|----------------------------------|
+| 💻 Giao diện       | Java Swing                      |
+| 🧠 Ngôn ngữ        | Java                             |
+| 🛢️ Cơ sở dữ liệu   | PostgreSQL                      |
+| ☁️ Backend        | Supabase để lưu trữ người dùng  |
+| 🔧 IDE            | Eclipse                         |
 
 ---
 
@@ -139,20 +150,23 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ---
 
-## 📎 Liên hệ nhóm phát triển
+## 🧑‍💻 Nhóm phát triển
 
-- **Trần Minh Thương** – N21DCVT101  
-- **Trần Nguyễn Tuấn Khanh** – N21DCVT044  
-- **Đặng Thu Huyền** – N21DCVT040  
-- **Nguyễn Đình Lân** – N21DCVT057  
+| Tên thành viên                 | Mã sinh viên      |
+|-------------------------------|-------------------|
+| Trần Minh Thương              | N21DCVT101        |
+| Trần Nguyễn Tuấn Khanh        | N21DCVT044        |
+| Đặng Thu Huyền                | N21DCVT040        |
+| Nguyễn Đình Lân               | N21DCVT057        |
 
 ---
 
-## 🏆 Liên hệ
+## ❤️ Góp ý & Liên hệ
 
-💡 Nếu bạn thích dự án này, hãy ⭐️ trên GitHub nhé!
+📩 Email: tranminhthuong08082003@gmail.com  
+⭐ Nếu bạn thấy dự án hữu ích, hãy để lại một **Star ⭐ trên GitHub** để ủng hộ nhóm nhé!
 
-📩 Liên hệ: tranminhthuong08082003@gmail.com | 
+> Made with ❤️ by **Nhóm 8 – PTIT**
 
-📌 Tác giả: 🚀 Nhom 8 - PTIT! 🚀
+---
 
