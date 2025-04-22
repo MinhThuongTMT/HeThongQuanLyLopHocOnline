@@ -5,9 +5,9 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Supabase-%2300C4B8.svg?style=for-the-badge&logo=supabase&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Java%20Swing-Desktop%20UI-0033cc?style=flat&logo=java&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-4da6ff?style=flat&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-Cloud-00c4b8?style=flat&logo=supabase&logoColor=white" />
   <img src="https://img.shields.io/badge/Project-PTIT-red?style=flat" />
 </p>
 
