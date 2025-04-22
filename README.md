@@ -50,7 +50,7 @@ Một phần mềm mô phỏng hệ thống quản lý lớp học trực tuyế
 
 ## 👨‍🎓 Giao diện Sinh viên
 
-![image](https://github.com/user-attachments/assets/6523674c-45af-4922-b9b0-5830f15d51aa)
+![image](https://github.com/user-attachments/assets/6b29399a-4700-4451-a4a4-ec3c42fc7f8f)
 
 ---
 
