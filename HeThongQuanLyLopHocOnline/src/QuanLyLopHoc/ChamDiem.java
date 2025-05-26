@@ -29,10 +29,10 @@ public class ChamDiem extends JFrame {
     private DefaultTableModel tableModel;
     private JTextField Mon_text;
 
-    // Thông tin kết nối database
-    private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true&prepareThreshold=0";
-    private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
-    private static final String DB_PASSWORD = "MinhThuong0808";
+	// Thông tin kết nối database
+	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
+	private static final String DB_USERNAME = "postgres.vrnqdslteaehazpwkipz";
+	private static final String DB_PASSWORD = "MinhThuong0808";
 
     public ChamDiem() {
         this("");
