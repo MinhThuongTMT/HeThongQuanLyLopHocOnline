@@ -30,9 +30,9 @@ public class QuanLyLopHoc extends JPanel {
 	private JScrollPane scrollPane;
 
 	// Thông tin kết nối database
-	private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
-	private static final String DB_USERNAME = "postgres.vpehkzjmzpcskfzjjyql";
-	private static final String DB_PASSWORD = "MinhThuong0808";
+        private static final String DB_URL = "jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true";
+        private static final String DB_USERNAME = "postgres.vrnqdslteaehazpwkipz";
+        private static final String DB_PASSWORD = "MinhThuong0808";
 
 	// Hằng số cho cột bảng
 	private static final String[] CLASS_COLUMNS = { "Mã SV", "Tên", "Ngày Sinh", "Giới Tính", "Lớp", "Môn học",
