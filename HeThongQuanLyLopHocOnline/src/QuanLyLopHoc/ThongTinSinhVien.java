@@ -566,7 +566,6 @@ public class ThongTinSinhVien extends JFrame implements ThongTinSinhVien_Interfa
 		Connection conn = null;
 		PreparedStatement pstmtBaitap = null;
 		PreparedStatement pstmtCourses = null;
-		PreparedStatement pstmtDiem = null;
 		PreparedStatement pstmtDiemDanh = null;
 		PreparedStatement pstmtChamDiem = null;
 		PreparedStatement pstmtStudents = null;
@@ -584,31 +583,25 @@ public class ThongTinSinhVien extends JFrame implements ThongTinSinhVien_Interfa
 			pstmtBaitap.setString(1, originalMssv);
 			pstmtBaitap.executeUpdate();
 
-			// 2. Xóa bản ghi trong bảng diem (nếu tồn tại)
-			String sqlDiem = "DELETE FROM diem WHERE mssv = ?";
-			pstmtDiem = conn.prepareStatement(sqlDiem);
-			pstmtDiem.setString(1, originalMssv);
-			pstmtDiem.executeUpdate();
-
-			// 3. Xóa bản ghi trong bảng diemdanh (nếu tồn tại)
+			// 2. Xóa bản ghi trong bảng diemdanh (nếu tồn tại)
 			String sqlDiemDanh = "DELETE FROM diemdanh WHERE mssv = ?";
 			pstmtDiemDanh = conn.prepareStatement(sqlDiemDanh);
 			pstmtDiemDanh.setString(1, originalMssv);
 			pstmtDiemDanh.executeUpdate();
 
-			// 4. Xóa bản ghi trong bảng chamdiem (nếu tồn tại)
+			// 3. Xóa bản ghi trong bảng chamdiem (nếu tồn tại)
 			String sqlChamDiem = "DELETE FROM chamdiem WHERE mssv = ?";
 			pstmtChamDiem = conn.prepareStatement(sqlChamDiem);
 			pstmtChamDiem.setString(1, originalMssv);
 			pstmtChamDiem.executeUpdate();
 
-			// 5. Xóa bản ghi trong bảng courses
+			// 4. Xóa bản ghi trong bảng courses
 			String sqlCourses = "DELETE FROM courses WHERE mssv = ?";
 			pstmtCourses = conn.prepareStatement(sqlCourses);
 			pstmtCourses.setString(1, originalMssv);
 			pstmtCourses.executeUpdate();
 
-			// 6. Xóa bản ghi trong bảng students
+			// 5. Xóa bản ghi trong bảng students
 			String sqlStudents = "DELETE FROM students WHERE mssv = ?";
 			pstmtStudents = conn.prepareStatement(sqlStudents);
 			pstmtStudents.setString(1, originalMssv);
@@ -662,8 +655,6 @@ public class ThongTinSinhVien extends JFrame implements ThongTinSinhVien_Interfa
 					pstmtBaitap.close();
 				if (pstmtCourses != null)
 					pstmtCourses.close();
-				if (pstmtDiem != null)
-					pstmtDiem.close();
 				if (pstmtDiemDanh != null)
 					pstmtDiemDanh.close();
 				if (pstmtChamDiem != null)
